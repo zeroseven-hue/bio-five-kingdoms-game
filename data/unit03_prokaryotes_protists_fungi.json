@@ -1,0 +1,233 @@
+{
+  "unit": "micro",
+  "title": "微觀奇兵",
+  "missions": [
+    {
+      "id": "micro-01",
+      "unit": "micro",
+      "concept": "細胞核偵查",
+      "text": "找出沒有真正細胞核的生物",
+      "rule": "accepted:藍綠菌,大腸桿菌,乳酸桿菌",
+      "acceptedSpecies": [
+        "藍綠菌",
+        "大腸桿菌",
+        "乳酸桿菌"
+      ],
+      "difficulty": "基礎",
+      "explanation": "原核生物的遺傳物質沒有核膜包圍。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 20,
+        "originalQuestion": "有關生物分類中「原核生物界」的敘述，下列何者正確？"
+      }
+    },
+    {
+      "id": "micro-02",
+      "unit": "micro",
+      "concept": "光合例外",
+      "text": "找出能光合作用、卻沒有葉綠體的生物",
+      "rule": "accepted:藍綠菌",
+      "acceptedSpecies": [
+        "藍綠菌"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "藍綠菌有葉綠素，卻沒有葉綠體。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 36,
+        "originalQuestion": "下列關於藍菌的敘述何者正確？"
+      }
+    },
+    {
+      "id": "micro-03",
+      "unit": "micro",
+      "concept": "發酵高手",
+      "text": "找出可用來釀酒的單細胞真菌",
+      "rule": "accepted:酵母菌",
+      "acceptedSpecies": [
+        "酵母菌"
+      ],
+      "difficulty": "基礎",
+      "explanation": "酵母菌屬真菌，可進行酒精發酵。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 19,
+        "originalQuestion": "某篇介紹生質能源的文章中，其中一段文字為：「可利用某種真菌類的生物，將醣類含量高的玉米分解以生產酒精。」下列何者最可能是此段文字中所提到的生物？〔100.　聯測〕"
+      }
+    },
+    {
+      "id": "micro-04",
+      "unit": "micro",
+      "concept": "優酪乳助手",
+      "text": "找出可用於製作優酪乳的細菌",
+      "rule": "accepted:乳酸桿菌",
+      "acceptedSpecies": [
+        "乳酸桿菌"
+      ],
+      "difficulty": "基礎",
+      "explanation": "乳酸桿菌屬於原核生物。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 38,
+        "originalQuestion": "下列生物與人類的關係之敘述，何者正確？"
+      }
+    },
+    {
+      "id": "micro-05",
+      "unit": "micro",
+      "concept": "纖毛快跑",
+      "text": "找出靠纖毛運動的單細胞生物",
+      "rule": "accepted:草履蟲",
+      "acceptedSpecies": [
+        "草履蟲"
+      ],
+      "difficulty": "基礎",
+      "explanation": "草履蟲以纖毛運動，具有細胞核。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 21,
+        "originalQuestion": "下列有關草履蟲的描述，哪幾項是正確的？(甲)是一種原生生物、(乙)不具有細胞核、(丙)是單細胞生物、(丁)只能行光合作用來獲得養分、(戊)靠體表的纖毛來運動。"
+      }
+    },
+    {
+      "id": "micro-06",
+      "unit": "micro",
+      "concept": "雙面生活",
+      "text": "找出具有葉綠體、又以鞭毛運動的生物",
+      "rule": "accepted:眼蟲",
+      "acceptedSpecies": [
+        "眼蟲"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "眼蟲有葉綠體，沒有細胞壁，屬原生生物。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 24,
+        "originalQuestion": "下列哪一種生物兼具有動、植物特徵，在有光的環境下可進行光合作用而自製養分，但在黑暗中則攝取環境中的養分？"
+      }
+    },
+    {
+      "id": "micro-07",
+      "unit": "micro",
+      "concept": "名字會騙人",
+      "text": "找出原生菌類，而不是真菌",
+      "rule": "accepted:黏菌",
+      "acceptedSpecies": [
+        "黏菌"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "黏菌依課堂五界分類屬於原生生物界。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 9,
+        "originalQuestion": "若將生物分為五界，則有關生物種類與特徵的敘述，下列何者正確？"
+      }
+    },
+    {
+      "id": "micro-08",
+      "unit": "micro",
+      "concept": "一個細胞的藻",
+      "text": "找出單細胞藻類",
+      "rule": "accepted:矽藻",
+      "acceptedSpecies": [
+        "矽藻"
+      ],
+      "difficulty": "基礎",
+      "explanation": "矽藻為單細胞，昆布和石花菜為多細胞。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 47,
+        "originalQuestion": "(甲)矽藻；(乙)石花菜；(丙)昆布。可麗將上述三種藻類分成(甲)與(乙)(丙)兩組，其分類依據為何？"
+      }
+    },
+    {
+      "id": "micro-09",
+      "unit": "micro",
+      "concept": "石花凍來源",
+      "text": "找出可提煉洋菜製作石花凍的藻類",
+      "rule": "accepted:石花菜",
+      "acceptedSpecies": [
+        "石花菜"
+      ],
+      "difficulty": "基礎",
+      "explanation": "石花菜屬紅藻，是洋菜的來源之一。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 4,
+        "originalQuestion": "我們日常生活所吃的布丁、果凍等東西，它的原料主要來自於下列何者？"
+      }
+    },
+    {
+      "id": "micro-10",
+      "unit": "micro",
+      "concept": "菌絲調查",
+      "text": "找出具有菌絲的真菌",
+      "rule": "accepted:青黴菌,黑黴菌,香菇",
+      "acceptedSpecies": [
+        "青黴菌",
+        "黑黴菌",
+        "香菇"
+      ],
+      "difficulty": "基礎",
+      "explanation": "黴菌和蕈類有菌絲；一般酵母菌不以菌絲為典型構造。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 42,
+        "originalQuestion": "小剛上分類課時，將靈芝和黴菌分為一類，酵母菌與肉毒桿菌分為另外一類。請問他的分類依據是什麼？"
+      }
+    },
+    {
+      "id": "micro-11",
+      "unit": "micro",
+      "concept": "抗菌研究",
+      "text": "找出可用來生產青黴素的真菌",
+      "rule": "accepted:青黴菌",
+      "acceptedSpecies": [
+        "青黴菌"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "部分青黴菌能產生青黴素。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 43,
+        "originalQuestion": "在實驗室中利用培養皿培育出三種菌落，當甲菌落增殖擴大時，另外兩種菌落逐漸縮小，最後中央僅剩甲菌落，則甲菌落可能為何？"
+      }
+    },
+    {
+      "id": "micro-12",
+      "unit": "micro",
+      "concept": "原生集合",
+      "text": "找出原生生物界的成員",
+      "rule": "accepted:草履蟲,變形蟲,水綿,矽藻,眼蟲,黏菌,石花菜,昆布",
+      "acceptedSpecies": [
+        "草履蟲",
+        "變形蟲",
+        "水綿",
+        "矽藻",
+        "眼蟲",
+        "黏菌",
+        "石花菜",
+        "昆布"
+      ],
+      "difficulty": "基礎",
+      "explanation": "原生生物有細胞核；不一定都有細胞壁或葉綠體。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit03_prokaryotes_protists_fungi.json",
+        "questionId": 44,
+        "originalQuestion": "下列有關原生生物的特徵，何者正確？"
+      }
+    }
+  ]
+}

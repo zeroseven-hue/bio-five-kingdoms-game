@@ -1,0 +1,230 @@
+{
+  "unit": "animals",
+  "title": "動物派對",
+  "missions": [
+    {
+      "id": "animals-01",
+      "unit": "animals",
+      "concept": "節肢集合",
+      "text": "找出節肢動物",
+      "rule": "accepted:蜘蛛,蝴蝶,螃蟹",
+      "acceptedSpecies": [
+        "蜘蛛",
+        "蝴蝶",
+        "螃蟹"
+      ],
+      "difficulty": "基礎",
+      "explanation": "節肢動物的身體及附肢分節，具有外骨骼。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 20,
+        "originalQuestion": "在野外經常可以看見蜘蛛結網以捕捉昆蟲的情景，請問蜘蛛在分類上屬於下列哪一門？"
+      }
+    },
+    {
+      "id": "animals-02",
+      "unit": "animals",
+      "concept": "六足昆蟲",
+      "text": "找出胸部具有三對步足的昆蟲",
+      "rule": "accepted:蝴蝶",
+      "acceptedSpecies": [
+        "蝴蝶"
+      ],
+      "difficulty": "基礎",
+      "explanation": "昆蟲有三對步足，著生於胸部。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 7,
+        "originalQuestion": "昆蟲是陸地上最普遍的節肢動物，下列何者不是它的特徵？"
+      }
+    },
+    {
+      "id": "animals-03",
+      "unit": "animals",
+      "concept": "八足偵探",
+      "text": "找出有四對步足、不是昆蟲的動物",
+      "rule": "accepted:蜘蛛",
+      "acceptedSpecies": [
+        "蜘蛛"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "蜘蛛屬節肢動物，但不是昆蟲。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 45,
+        "originalQuestion": "下列有關蜘蛛的敘述何者錯誤？"
+      }
+    },
+    {
+      "id": "animals-04",
+      "unit": "animals",
+      "concept": "刺絲胞集合",
+      "text": "找出有刺絲胞的動物",
+      "rule": "accepted:海葵,水母",
+      "acceptedSpecies": [
+        "海葵",
+        "水母"
+      ],
+      "difficulty": "基礎",
+      "explanation": "海葵和水母是刺絲胞動物。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 12,
+        "originalQuestion": "關於刺絲胞動物之敘述，下列何者正確？"
+      }
+    },
+    {
+      "id": "animals-05",
+      "unit": "animals",
+      "concept": "管足探險",
+      "text": "找出具有管足的棘皮動物",
+      "rule": "accepted:海星,海參",
+      "acceptedSpecies": [
+        "海星",
+        "海參"
+      ],
+      "difficulty": "基礎",
+      "explanation": "海星和海參屬棘皮動物。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 31,
+        "originalQuestion": "野柳、頭城等岩石海岸有一些海星、海膽、陽燧足等動物，牠們屬於哪一類動物？"
+      }
+    },
+    {
+      "id": "animals-06",
+      "unit": "animals",
+      "concept": "柔軟身體",
+      "text": "找出軟體動物",
+      "rule": "accepted:蝸牛,章魚",
+      "acceptedSpecies": [
+        "蝸牛",
+        "章魚"
+      ],
+      "difficulty": "基礎",
+      "explanation": "蝸牛與章魚均屬軟體動物；不是所有軟體動物都有外露硬殼。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 36,
+        "originalQuestion": "「鮑魚」為中國傳統的名貴食材，是海中的軟體動物，試問牠們在分類上與哪一種生物比較接近？"
+      }
+    },
+    {
+      "id": "animals-07",
+      "unit": "animals",
+      "concept": "分節小幫手",
+      "text": "找出可翻鬆土壤的環節動物",
+      "rule": "accepted:蚯蚓",
+      "acceptedSpecies": [
+        "蚯蚓"
+      ],
+      "difficulty": "基礎",
+      "explanation": "蚯蚓身體分節，屬無脊椎動物。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 47,
+        "originalQuestion": "蚯蚓除了會翻鬆土壤，有助於農作物的生長之外，下列關於蚯蚓的敘述何者錯誤？"
+      }
+    },
+    {
+      "id": "animals-08",
+      "unit": "animals",
+      "concept": "真正的魚",
+      "text": "找出分類上屬於魚類的生物",
+      "rule": "accepted:海馬,鯊魚",
+      "acceptedSpecies": [
+        "海馬",
+        "鯊魚"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "海馬和鯊魚是魚；海豚是哺乳類。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 35,
+        "originalQuestion": "(甲)鮪魚；(乙)鯊魚；(丙)海馬；(丁)鯨魚；(戊)章魚。以上哪些生物在分類上屬於魚類？"
+      }
+    },
+    {
+      "id": "animals-09",
+      "unit": "animals",
+      "concept": "軟骨線索",
+      "text": "找出軟骨魚類",
+      "rule": "accepted:鯊魚",
+      "acceptedSpecies": [
+        "鯊魚"
+      ],
+      "difficulty": "基礎",
+      "explanation": "鯊魚屬軟骨魚類，以鰓呼吸。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 37,
+        "originalQuestion": "上課介紹到魚類時，老師要同學舉例。亦翔說：「鯊魚、魟魚」，姿穎說：「虱目魚、比目魚」，文安說：「吳郭魚、鱈魚」，筱夢說：「彈塗魚、海馬」，請問誰說出的魚類，其骨骼全為軟骨？"
+      }
+    },
+    {
+      "id": "animals-10",
+      "unit": "animals",
+      "concept": "乳腺線索",
+      "text": "找出哺乳類動物",
+      "rule": "accepted:蝙蝠,海豚,鴨嘴獸",
+      "acceptedSpecies": [
+        "蝙蝠",
+        "海豚",
+        "鴨嘴獸"
+      ],
+      "difficulty": "基礎",
+      "explanation": "哺乳類具有乳腺；不一定全部胎生。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 9,
+        "originalQuestion": "(甲)具有乳腺；(乙)具有育兒袋；(丙)體表具有毛髮；(丁)胎生動物。以上特徵中，何者是哺乳類動物具有之基本特徵？"
+      }
+    },
+    {
+      "id": "animals-11",
+      "unit": "animals",
+      "concept": "卵生哺乳類",
+      "text": "找出卵生的哺乳類",
+      "rule": "accepted:鴨嘴獸",
+      "acceptedSpecies": [
+        "鴨嘴獸"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "鴨嘴獸卵生，仍以乳汁哺育幼體。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 10,
+        "originalQuestion": "下列有關鴨嘴獸和針鼴兩種哺乳動物生殖方式之敘述，何者是正確的？"
+      }
+    },
+    {
+      "id": "animals-12",
+      "unit": "animals",
+      "concept": "水中肺呼吸",
+      "text": "找出用肺呼吸的海豚樣本",
+      "rule": "accepted:海豚",
+      "acceptedSpecies": [
+        "海豚"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "海豚住在水中，卻用肺呼吸，屬哺乳類。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit05_animals.json",
+        "questionId": 41,
+        "originalQuestion": "近年在東部沿海盛行觀賞鯨豚，下列關於海豚的敘述，何者正確？"
+      }
+    }
+  ]
+}

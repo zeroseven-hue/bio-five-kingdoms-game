@@ -1,0 +1,269 @@
+{
+  "unit": "plants",
+  "title": "植感大餐",
+  "missions": [
+    {
+      "id": "plants-01",
+      "unit": "plants",
+      "concept": "花的證據",
+      "text": "找出題庫中可開花的被子植物",
+      "rule": "accepted:仙人掌,玉米,蔥,蒲公英,地瓜葉,土肉桂",
+      "acceptedSpecies": [
+        "仙人掌",
+        "玉米",
+        "蔥",
+        "蒲公英",
+        "地瓜葉",
+        "土肉桂"
+      ],
+      "difficulty": "基礎",
+      "explanation": "具有花的構造是辨識被子植物的依據。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 1,
+        "originalQuestion": "已知仙人掌有針狀葉及肥厚可儲水的莖，並可開花結果。根據上述說明，有關仙人掌的分類及其依據，下列何者最合理？〔108.　會考〕"
+      }
+    },
+    {
+      "id": "plants-02",
+      "unit": "plants",
+      "concept": "矮小綠世界",
+      "text": "找出缺乏維管束的蘚苔植物",
+      "rule": "accepted:地錢,土馬騌",
+      "acceptedSpecies": [
+        "地錢",
+        "土馬騌"
+      ],
+      "difficulty": "基礎",
+      "explanation": "蘚苔植物缺乏維管束。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 6,
+        "originalQuestion": "有關植物界的生物之特徵，下列敘述何者正確？"
+      }
+    },
+    {
+      "id": "plants-03",
+      "unit": "plants",
+      "concept": "蕨類調查",
+      "text": "找出葉背可見孢子囊堆的蕨類",
+      "rule": "accepted:筆筒樹,山蘇,腎蕨",
+      "acceptedSpecies": [
+        "筆筒樹",
+        "山蘇",
+        "腎蕨"
+      ],
+      "difficulty": "基礎",
+      "explanation": "孢子囊堆包含多個孢子囊。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 7,
+        "originalQuestion": "力弘到陽明山泡湯時，看到一種植物外型有點像椰子樹，同學阿美告訴他那是筆筒樹，屬於蕨類，阿美主要是依據哪項特徵確定筆筒樹是蕨類？"
+      }
+    },
+    {
+      "id": "plants-04",
+      "unit": "plants",
+      "concept": "運輸通道",
+      "text": "找出具有維管束的植物",
+      "rule": "accepted:筆筒樹,山蘇,腎蕨,松樹,紅檜,蘇鐵,玉米,蔥,仙人掌,蒲公英,地瓜葉,土肉桂",
+      "acceptedSpecies": [
+        "筆筒樹",
+        "山蘇",
+        "腎蕨",
+        "松樹",
+        "紅檜",
+        "蘇鐵",
+        "玉米",
+        "蔥",
+        "仙人掌",
+        "蒲公英",
+        "地瓜葉",
+        "土肉桂"
+      ],
+      "difficulty": "基礎",
+      "explanation": "蕨類與種子植物具有維管束。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 8,
+        "originalQuestion": "小智將他所觀察的四種植物分成兩組，一組為地錢、土馬騌、另一組為筆筒樹、玉米。這種分組方式是根據下列哪一項植物的特徵？〔100.　基測Ⅱ〕"
+      }
+    },
+    {
+      "id": "plants-05",
+      "unit": "plants",
+      "concept": "神木親戚",
+      "text": "找出裸子植物",
+      "rule": "accepted:松樹,紅檜,蘇鐵",
+      "acceptedSpecies": [
+        "松樹",
+        "紅檜",
+        "蘇鐵"
+      ],
+      "difficulty": "基礎",
+      "explanation": "裸子植物的種子不包在果實內。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 10,
+        "originalQuestion": "阿里山神木（紅檜）的樹齡已經相當久了，請問它是屬於下列哪一類植物？"
+      }
+    },
+    {
+      "id": "plants-06",
+      "unit": "plants",
+      "concept": "種子的旅程",
+      "text": "找出以種子繁殖的植物",
+      "rule": "accepted:松樹,紅檜,蘇鐵,玉米,蔥,仙人掌,蒲公英,地瓜葉,土肉桂",
+      "acceptedSpecies": [
+        "松樹",
+        "紅檜",
+        "蘇鐵",
+        "玉米",
+        "蔥",
+        "仙人掌",
+        "蒲公英",
+        "地瓜葉",
+        "土肉桂"
+      ],
+      "difficulty": "基礎",
+      "explanation": "裸子與被子植物皆屬種子植物。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 3,
+        "originalQuestion": "上植物分類課程時，嬋音將椰子、柚子、紅檜分為一群；山蘇、蘚苔、香菇分為另一群。則她的分類依據為何？"
+      }
+    },
+    {
+      "id": "plants-07",
+      "unit": "plants",
+      "concept": "孢子植物",
+      "text": "找出以孢子繁殖的植物",
+      "rule": "accepted:地錢,土馬騌,筆筒樹,山蘇,腎蕨",
+      "acceptedSpecies": [
+        "地錢",
+        "土馬騌",
+        "筆筒樹",
+        "山蘇",
+        "腎蕨"
+      ],
+      "difficulty": "基礎",
+      "explanation": "本任務只接受植物，真菌也可有孢子，但不符合植物限定。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 19,
+        "originalQuestion": "蕨類與裸子植物的主要區別為下列何者？"
+      }
+    },
+    {
+      "id": "plants-08",
+      "unit": "plants",
+      "concept": "果實保護",
+      "text": "找出種子包在果實內的植物",
+      "rule": "accepted:玉米,蔥,仙人掌,蒲公英,地瓜葉,土肉桂",
+      "acceptedSpecies": [
+        "玉米",
+        "蔥",
+        "仙人掌",
+        "蒲公英",
+        "地瓜葉",
+        "土肉桂"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "被子植物的種子包在果實內；松樹不形成真正果實。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 9,
+        "originalQuestion": "下列何者為松樹與水稻不同之處？"
+      }
+    },
+    {
+      "id": "plants-09",
+      "unit": "plants",
+      "concept": "花粉管助手",
+      "text": "找出具有花粉管的種子植物",
+      "rule": "accepted:松樹,紅檜,蘇鐵,玉米,蔥,仙人掌,蒲公英,地瓜葉,土肉桂",
+      "acceptedSpecies": [
+        "松樹",
+        "紅檜",
+        "蘇鐵",
+        "玉米",
+        "蔥",
+        "仙人掌",
+        "蒲公英",
+        "地瓜葉",
+        "土肉桂"
+      ],
+      "difficulty": "基礎",
+      "explanation": "課堂以花粉管作為種子植物繁殖特徵。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 21,
+        "originalQuestion": "下列哪些特徵為「松樹」和「蒲公英」的共同點？(甲)靠風力傳播種子、(乙)以花瓣吸引昆蟲、(丙)具有維管束、(丁)可形成果實、(戊)以花粉管受精。"
+      }
+    },
+    {
+      "id": "plants-10",
+      "unit": "plants",
+      "concept": "單子葉集合",
+      "text": "找出單子葉植物",
+      "rule": "accepted:玉米,蔥",
+      "acceptedSpecies": [
+        "玉米",
+        "蔥"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "玉米和蔥均屬單子葉植物。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 22,
+        "originalQuestion": "「歲寒三友」中的松、竹、梅分別屬於下列何種植物？"
+      }
+    },
+    {
+      "id": "plants-11",
+      "unit": "plants",
+      "concept": "鬚根線索",
+      "text": "找出具有鬚根、屬單子葉的蔥類樣本",
+      "rule": "accepted:蔥",
+      "acceptedSpecies": [
+        "蔥"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "題幹中的蔥具有鬚根，屬單子葉植物。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 43,
+        "originalQuestion": "菁菁看見媽媽買了一把蔥回家，只見那把蔥有鬚狀根，無網狀葉脈，菁菁問媽媽，有見過蔥開花嗎？媽媽回答：有啊！而且花有點像蒲公英開花的形態。根據兩人的對話，請判斷蔥應該是屬於下列哪種植物？"
+      }
+    },
+    {
+      "id": "plants-12",
+      "unit": "plants",
+      "concept": "捲曲幼葉",
+      "text": "找出幼葉捲曲的山蘇樣本",
+      "rule": "accepted:山蘇",
+      "acceptedSpecies": [
+        "山蘇"
+      ],
+      "difficulty": "挑戰",
+      "explanation": "山蘇屬蕨類，幼葉捲曲，不產生種子。",
+      "hint": "請比較分類與構造特徵；可按「查看線索」再判斷。",
+      "source": {
+        "file": "unit04_plants.json",
+        "questionId": 50,
+        "originalQuestion": "阿花最近參加了林務局舉辦的踏青活動，但讓她印象最深刻的無非是那頓風味午餐，其中她最喜歡炒「山蘇」和炸「野薑花」兩道菜，於是阿花就細心記下它們的差異，請問哪些敘述會出現在阿花的筆記簿上？(甲)野薑花會開花，山蘇不會；(乙)野薑花有果實和種子，山蘇沒有果實只有種子；(丙)山蘇的幼葉捲曲，野薑花不會；(丁)野薑花的莖會年年加粗，山蘇不會。"
+      }
+    }
+  ]
+}
