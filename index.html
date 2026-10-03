@@ -3,93 +3,136 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>五界研究所｜生物調查任務 bio-five-kingdoms-game</title>
+    <title>生物迴轉食堂：五界大餐對決 bio-five-kingdoms-game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="app">
-    <!-- 頂端統一導覽列 -->
-    <div class="top-nav-bar" style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
-        <a href="https://zeroseven-hue.github.io/bio-standalone-games/" style="background: #059669; color: white; border-radius: 20px; padding: 9px 20px; font-weight: 700; text-decoration: none; font-size: 14.5px; box-shadow: 0 4px 12px rgba(5,150,105,0.25); display: flex; align-items: center; gap: 6px; transition: all 0.2s;">👉 切換至【獨立單元遊戲大廳】</a>
-        <button onclick="openTimerModal()" style="background: #0284c7; color: white; border: none; border-radius: 20px; padding: 9px 20px; font-weight: 700; cursor: pointer; font-size: 14.5px; box-shadow: 0 4px 12px rgba(2,132,199,0.25); display: flex; align-items: center; gap: 6px; transition: all 0.2s;">⏱️ 課堂專注計時器</button>
+
+<div class="sushi-container">
+    <!-- 頂端統一導覽 -->
+    <div class="top-nav-bar">
+        <a href="https://zeroseven-hue.github.io/bio-standalone-games/" class="nav-btn nav-btn-green">👉 切換至【獨立單元遊戲大廳】</a>
+        <button onclick="openTimerModal()" class="nav-btn nav-btn-blue">⏱️ 課堂專注計時器</button>
     </div>
 
-    <header>
-        <div class="brand">
-            <span class="brand-icon">🔬</span>
-            <div>
-                <small>BIO DISCOVERY LAB · 五界特徵調查</small>
-                <h1>五界研究所</h1>
+    <!-- 餐廳 Header & 統計 -->
+    <header class="restaurant-header">
+        <div class="chef-brand">
+            <div class="chef-avatar">👨‍🍳</div>
+            <div class="chef-title">
+                <h1>🍣 生物迴轉食堂 · 五界大餐</h1>
+                <small>BIO CONVEYOR EXPRESS · 國中生物五界分類評量</small>
             </div>
         </div>
-        <div class="wallet">
-            <small>研究金幣</small>
-            <strong id="coins">0</strong>
+
+        <div class="header-stats">
+            <div class="stat-badge">
+                <small>研究金幣</small>
+                <strong id="coins">0</strong>
+            </div>
+            <div class="stat-badge">
+                <small>本局得分</small>
+                <strong id="score">0</strong>
+            </div>
+            <div class="stat-badge">
+                <small>連擊 COMBO</small>
+                <strong id="combo">×0</strong>
+            </div>
+            <div class="stat-badge">
+                <small>完成進度</small>
+                <strong id="progress">0 / 9</strong>
+            </div>
         </div>
     </header>
 
+    <!-- 樂園式操作列 -->
     <div class="toolbar">
-        <button id="sound" aria-pressed="true">音效：開</button>
-        <button id="guide">玩法</button>
-        <button id="atlas">圖鑑</button>
-        <button id="shop">裝飾</button>
+        <div class="tool-group">
+            <button class="btn-tool" id="sound" aria-pressed="true">🔊 音效：開</button>
+            <button class="btn-tool" id="guide">📖 玩法說明</button>
+            <button class="btn-tool" id="atlas">📚 五界圖鑑</button>
+            <button class="btn-tool" id="shop">🎨 食堂裝飾</button>
+        </div>
+        <div class="tool-group">
+            <label style="font-size: 13.5px; font-weight: 700; color: var(--wood-dark); display: flex; align-items: center; gap: 6px;">
+                模式：
+                <select id="mode" style="padding: 5px 10px; border-radius: 8px; border: 1.5px solid #d6c4b0; font-weight: 700; outline: none;">
+                    <option value="learn">練習｜顯示特徵標籤</option>
+                    <option value="challenge">挑戰｜隱藏特徵（自判斷）</option>
+                </select>
+            </label>
+        </div>
     </div>
 
+    <!-- 大餐主題選擇區 -->
     <section class="theme-panel">
-        <h2>今天想探索哪一份大餐？</h2>
+        <h2>今天想探索哪一份五界大餐？</h2>
         <div class="theme-grid">
-            <button data-theme="micro"><strong>微觀奇兵</strong><small>原核・原生・真菌</small></button>
-            <button data-theme="plants"><strong>植感大餐</strong><small>植物分類與特徵</small></button>
-            <button data-theme="animals"><strong>動物派對</strong><small>動物分類與特徵</small></button>
-            <button data-theme="mixed"><strong>混合大餐</strong><small>三個單元平均抽題</small></button>
+            <button class="theme-card" data-theme="micro" aria-pressed="false">
+                <strong>🦠 微觀奇兵大餐</strong>
+                <small>原核・原生・真菌界</small>
+            </button>
+            <button class="theme-card" data-theme="plants" aria-pressed="false">
+                <strong>🌿 植感大餐</strong>
+                <small>植物分類與構造特徵</small>
+            </button>
+            <button class="theme-card" data-theme="animals" aria-pressed="false">
+                <strong>🦁 動物派對大餐</strong>
+                <small>無脊椎與脊椎動物分類</small>
+            </button>
+            <button class="theme-card" data-theme="mixed" aria-pressed="true">
+                <strong>🍣 迴轉混合大餐</strong>
+                <small>跨三大單元隨機綜合抽題</small>
+            </button>
         </div>
-        <p id="theme-info">選擇主題，再開始研究。</p>
-        <button id="begin">開始這份研究</button>
+        <p id="theme-info" style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 12px; font-weight: 600;">選擇主題大餐，點擊下方按鈕開始研究。</p>
+        <button class="btn-begin" id="begin">🚀 開始迴轉出餐研究</button>
     </section>
 
-    <section class="dashboard">
-        <div><small>本局得分</small><strong id="score">0</strong></div>
-        <div><small>連續正確</small><strong id="combo">×0</strong></div>
-        <div><small>研究進度</small><strong id="progress">0 / 9</strong></div>
-        <label>模式
-            <select id="mode">
-                <option value="learn">練習｜可查看線索</option>
-                <option value="challenge">挑戰｜先自己判斷</option>
-            </select>
-        </label>
+    <!-- 🍣 迴轉餐檯與顧客顧客座席 (3 位顧客點餐) -->
+    <section class="sushi-conveyor-area">
+        <div class="area-title">
+            <span>🍣 迴轉餐檯 · 顧客點餐委託 (點擊符合的生物卡即可送餐)</span>
+            <span style="font-size: 13px; color: #b45309; font-weight: 700;">每張委託需收集 2 份正確生物</span>
+        </div>
+        <div class="customers-grid" id="orders">
+            <!-- 由 JS 動態繪製 3 位顧客 -->
+        </div>
     </section>
 
-    <div class="section-title"><h2>01 · 研究委託</h2><span>選好樣本，再點委託提交</span></div>
-    <section id="orders" class="orders" aria-label="研究委託"></section>
-
-    <section class="bench">
-        <div class="section-title"><h2>02 · 樣本暫存盤</h2><span id="capacity">0 / 7</span></div>
-        <div id="belt" class="belt"></div>
-        <div id="inspector" class="inspector">點下方最前面的樣本取樣，再點暫存盤選取。</div>
+    <!-- 🍱 暫存吧台 (7格盤) -->
+    <section class="bench-section">
+        <div class="area-title" style="color: var(--wood-dark);">
+            <span>🍱 吧台暫存盤 (可暫存備用生物食材)</span>
+            <span id="capacity" style="font-size: 13px; color: var(--text-muted);">0 / 7</span>
+        </div>
+        <div class="plate-slots" id="belt"></div>
+        <div class="bench-inspector" id="inspector">點下方軌道上的生物食材取樣，或點暫存盤生物進行出餐。</div>
         <div class="bench-actions">
-            <button id="clue">查看線索</button>
-            <button id="return">放回樣本</button>
+            <button class="btn-bench" id="clue">🔍 查看線索</button>
+            <button class="btn-bench" id="return">↩️ 放回食材</button>
         </div>
     </section>
 
-    <div class="section-title"><h2>03 · 待調查樣本</h2><span>每條軌道最下方可取樣</span></div>
-    <section id="lanes" class="lanes" aria-label="樣本軌道"></section>
+    <!-- 🍣 下方 5 條木紋食材軌道 -->
+    <section class="lanes-section">
+        <div class="lanes-header">
+            <h2>🍱 五界生物食材軌道 (點擊任何卡片即可取樣出餐)</h2>
+            <button class="btn-refresh" id="shuffle">🔄 刷一波食材 (無限重整)</button>
+        </div>
+        <div class="lanes-grid" id="lanes">
+            <!-- 由 JS 動態繪製 5 條軌道 -->
+        </div>
+    </section>
 
-    <div class="controls">
-        <button id="shuffle">重整樣本（2）</button>
-        <button id="new">重新開始</button>
-    </div>
+    <!-- 狀態列 -->
+    <div class="status-bar" id="status" role="status" aria-live="polite">正在準備迴轉食堂…</div>
+</div>
 
-    <p id="status" role="status" aria-live="polite">正在準備研究室…</p>
-
-    <footer>依課堂五界分類 · 圖像為生物特徵示意 · 國中生物獨立單元遊戲大廳相容版</footer>
-</main>
-
-<div id="effects" aria-hidden="true"></div>
-
+<!-- 彈窗 Dialog -->
 <dialog id="dialog">
     <div id="dialog-content"></div>
-    <button id="close">回到研究室</button>
+    <button class="dialog-close-btn" id="close">回到迴轉食堂</button>
 </dialog>
 
 <!-- 課堂計時器 Modal -->
