@@ -63,9 +63,7 @@
       settleTitle: '🏆 關卡通關 CLEAR！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🕹️ 投幣出擊！遵守公約開始冒險',
-      accentColor: '#fbbf24',
-      cardBorder: '#f59e0b',
-      badgeBg: 'rgba(245, 158, 11, 0.15)'
+      accentColor: '#d97706', cardBorder: '#d97706', badgeBg: '#fef3c7'
     },
     nature: {
       id: 'nature',
@@ -76,9 +74,7 @@
       settleTitle: '🌻 生態調查圓滿完成！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🎒 踏上旅程！遵守公約出發探險',
-      accentColor: '#4ade80',
-      cardBorder: '#22c55e',
-      badgeBg: 'rgba(34, 197, 94, 0.15)'
+      accentColor: '#15803d', cardBorder: '#16a34a', badgeBg: '#dcfce7'
     },
     fantasy: {
       id: 'fantasy',
@@ -89,9 +85,7 @@
       settleTitle: '👑 勇者遠征大獲全勝！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🛡️ 拔出寶劍！遵守契約踏上征途',
-      accentColor: '#fde047',
-      cardBorder: '#d97706',
-      badgeBg: 'rgba(217, 119, 6, 0.15)'
+      accentColor: '#b45309', cardBorder: '#b45309', badgeBg: '#fef3c7'
     },
     warm: {
       id: 'warm',
@@ -102,9 +96,7 @@
       settleTitle: '🍵 特餐調配圓滿出爐！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🔥 開火上菜！遵守公約開始研究',
-      accentColor: '#fb923c',
-      cardBorder: '#ea580c',
-      badgeBg: 'rgba(234, 88, 12, 0.15)'
+      accentColor: '#ea580c', cardBorder: '#ea580c', badgeBg: '#ffedd5'
     },
     scifi: {
       id: 'scifi',
@@ -115,9 +107,7 @@
       settleTitle: '🏆 挑戰圓滿結算！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🚀 我已核對身分並遵守公約，開始出擊！',
-      accentColor: '#38bdf8',
-      cardBorder: '#38bdf8',
-      badgeBg: 'rgba(56, 189, 248, 0.15)'
+      accentColor: '#0284c7', cardBorder: '#0284c7', badgeBg: '#e0f2fe'
     }
   };
 
@@ -178,7 +168,7 @@
       .bgs-overlay {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(10, 15, 29, 0.92);
+        background: rgba(15, 23, 42, 0.72);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
         display: flex;
@@ -195,8 +185,8 @@
         max-height: 92vh;
         overflow-y: auto;
         padding: 24px 22px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85);
-        color: #f8fafc;
+        box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.05);
+        color: #1e293b;
         animation: bgsPopIn 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         box-sizing: border-box;
       }
@@ -296,15 +286,19 @@
         margin-top: 8px;
       }
       .bgs-btn-subtle {
-        background: #334155;
-        color: #cbd5e1;
-        border: 1px solid #475569;
+        background: #f1f5f9;
+        color: #334155;
+        border: 1.5px solid #cbd5e1;
         font-size: 0.9rem;
       }
+      .bgs-btn-subtle:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+      }
       .bgs-btn-locked {
-        background: #334155 !important;
-        color: #94a3b8 !important;
-        border: 1.5px solid #475569 !important;
+        background: #f1f5f9 !important;
+        color: #64748b !important;
+        border: 1.5px solid #cbd5e1 !important;
         cursor: not-allowed !important;
         box-shadow: none !important;
       }
@@ -357,466 +351,423 @@
       }
 
       /* ==========================================================================
-         🎨 1. SCIFI 主題 (深空星艦科技風)
+         🎨 1. SCIFI 主題 (清透冰川科技白 · 明亮高對比版)
          ========================================================================== */
       .bgs-theme-scifi {
-        background: #0f172a;
-        border: 2px solid #38bdf8;
+        background: #ffffff;
+        border: 2.5px solid #0284c7;
         border-radius: 24px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.3);
+        box-shadow: 0 20px 45px -10px rgba(2, 132, 199, 0.22), 0 0 0 1px rgba(2, 132, 199, 0.08);
       }
-      .bgs-theme-scifi .bgs-title { color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
-      .bgs-theme-scifi .bgs-subtitle { color: #94a3b8; }
-      .bgs-theme-scifi .bgs-label { color: #cbd5e1; }
+      .bgs-theme-scifi .bgs-title { color: #0369a1; text-shadow: none; font-weight: 900; }
+      .bgs-theme-scifi .bgs-subtitle { color: #64748b; font-weight: 600; }
+      .bgs-theme-scifi .bgs-label { color: #0f172a; font-weight: 700; }
       .bgs-theme-scifi .bgs-input, .bgs-theme-scifi .bgs-select {
-        background: #1e293b;
-        border: 1.5px solid #334155;
-        color: #f8fafc;
+        background: #f8fafc;
+        border: 1.5px solid #cbd5e1;
+        color: #0f172a;
+        font-weight: 600;
       }
       .bgs-theme-scifi .bgs-input:focus, .bgs-theme-scifi .bgs-select:focus {
-        border-color: #38bdf8;
-        box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
+        border-color: #0284c7;
+        box-shadow: 0 0 10px rgba(2, 132, 199, 0.3);
       }
       .bgs-theme-scifi .bgs-theme-tag {
-        background: rgba(56, 189, 248, 0.15);
-        border: 1px solid #38bdf8;
-        color: #7dd3fc;
+        background: #e0f2fe;
+        border: 1.5px solid #0284c7;
+        color: #0369a1;
+        font-weight: 800;
       }
       .bgs-theme-scifi .bgs-unit-badge {
-        background: rgba(56, 189, 248, 0.12);
-        border: 1.5px solid #38bdf8;
-        color: #7dd3fc;
+        background: #f0f9ff;
+        border: 1.5px solid #0284c7;
+        color: #0369a1;
+        font-weight: 800;
       }
       .bgs-theme-scifi .bgs-contract-box {
-        background: rgba(239, 68, 68, 0.12);
+        background: #fef2f2;
         border: 1.5px dashed #ef4444;
       }
-      .bgs-theme-scifi .bgs-contract-title { color: #fca5a5; }
-      .bgs-theme-scifi .bgs-contract-item { color: #fecaca; }
+      .bgs-theme-scifi .bgs-contract-title { color: #b91c1c; font-weight: 800; }
+      .bgs-theme-scifi .bgs-contract-item { color: #991b1b; }
       .bgs-theme-scifi .bgs-btn-primary {
         background: linear-gradient(135deg, #0284c7, #0369a1);
-        border: 1.5px solid #7dd3fc;
-        color: white;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.32);
       }
       .bgs-theme-scifi .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #38bdf8, #0284c7);
+        background: linear-gradient(135deg, #0369a1, #075985);
       }
       .bgs-theme-scifi .bgs-badge-success {
-        background: rgba(56, 189, 248, 0.15);
-        border: 2px solid #38bdf8;
-        color: #7dd3fc;
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+        background: #f0fdf4;
+        border: 2px solid #0284c7;
+        color: #0369a1;
       }
       .bgs-theme-scifi .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        border: 1.5px solid #fde68a;
-        color: white;
-        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+        background: linear-gradient(135deg, #0d9488, #0f766e);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
       }
       .bgs-theme-scifi .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #0284c7, #0369a1);
-        border: 1.5px solid #7dd3fc;
-        color: white;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+        background: linear-gradient(135deg, #334155, #1e293b);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
       }
       .bgs-theme-scifi .bgs-checklist-card {
-        background: #0f172a;
-        border: 2px solid #38bdf8;
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        background: #f0f9ff;
+        border: 2px solid #bae6fd;
       }
-      .bgs-theme-scifi .bgs-checklist-title { color: #38bdf8; }
+      .bgs-theme-scifi .bgs-checklist-title { color: #0369a1; }
       .bgs-theme-scifi .bgs-checklist-item {
-        background: #1e293b;
-        border: 1px solid #334155;
+        background: #ffffff;
+        border: 1px solid #bae6fd;
       }
-      .bgs-theme-scifi .bgs-checklist-item strong { color: #7dd3fc; }
-      .bgs-theme-scifi .bgs-checklist-item p { color: #cbd5e1; }
+      .bgs-theme-scifi .bgs-checklist-item strong { color: #0369a1; }
+      .bgs-theme-scifi .bgs-checklist-item p { color: #0f172a; }
       .bgs-theme-scifi .bgs-hardware-notice {
-        background: rgba(245, 158, 11, 0.15);
-        border: 1.5px dashed #f59e0b;
-        color: #fde68a;
+        background: #fff7ed;
+        border: 1.5px dashed #ea580c;
+        color: #9a3412;
       }
 
       /* ==========================================================================
-         🎨 2. PIXEL 主題 (復古像素街機風)
+         🎨 2. PIXEL 主題 (復古金屬街機白 · 明亮高對比版)
          ========================================================================== */
       .bgs-theme-pixel {
-        background: #181115;
-        border: 3.5px solid #f59e0b;
-        border-radius: 14px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.95), 0 0 25px rgba(245, 158, 11, 0.4), inset 0 0 15px rgba(220, 38, 38, 0.25);
+        background: #ffffff;
+        border: 3px solid #d97706;
+        border-radius: 20px;
+        box-shadow: 0 20px 45px -10px rgba(217, 119, 6, 0.22), 0 0 0 1px rgba(217, 119, 6, 0.1);
       }
       .bgs-theme-pixel .bgs-title {
-        color: #fbbf24;
-        text-shadow: 2px 2px 0px #78350f, 0 0 10px rgba(251, 191, 36, 0.6);
-        letter-spacing: 0.5px;
+        color: #92400e;
+        text-shadow: none;
+        letter-spacing: 0.05em;
+        font-weight: 900;
       }
-      .bgs-theme-pixel .bgs-subtitle { color: #fde68a; }
-      .bgs-theme-pixel .bgs-label { color: #fef08a; }
+      .bgs-theme-pixel .bgs-subtitle { color: #78350f; font-weight: 600; }
+      .bgs-theme-pixel .bgs-label { color: #451a03; font-weight: 700; }
       .bgs-theme-pixel .bgs-input, .bgs-theme-pixel .bgs-select {
-        background: #26141e;
-        border: 2px solid #b45309;
-        border-radius: 8px;
-        color: #fef08a;
+        background: #fffbeb;
+        border: 2px solid #fcd34d;
+        color: #451a03;
+        font-weight: 600;
       }
       .bgs-theme-pixel .bgs-input:focus, .bgs-theme-pixel .bgs-select:focus {
-        border-color: #fbbf24;
-        box-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+        border-color: #d97706;
+        box-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
       }
       .bgs-theme-pixel .bgs-theme-tag {
-        background: rgba(245, 158, 11, 0.22);
-        border: 1.5px solid #f59e0b;
-        color: #fde047;
+        background: #fef3c7;
+        border: 1.5px solid #d97706;
+        color: #92400e;
+        font-weight: 800;
       }
       .bgs-theme-pixel .bgs-unit-badge {
-        background: rgba(245, 158, 11, 0.18);
-        border: 2px solid #f59e0b;
-        color: #fef08a;
+        background: #fffbeb;
+        border: 2px solid #d97706;
+        color: #92400e;
+        font-weight: 800;
       }
       .bgs-theme-pixel .bgs-contract-box {
-        background: rgba(220, 38, 38, 0.18);
+        background: #fef2f2;
         border: 2px dashed #ef4444;
-        border-radius: 10px;
       }
-      .bgs-theme-pixel .bgs-contract-title { color: #fca5a5; }
-      .bgs-theme-pixel .bgs-contract-item { color: #fecaca; }
+      .bgs-theme-pixel .bgs-contract-title { color: #b91c1c; font-weight: 800; }
+      .bgs-theme-pixel .bgs-contract-item { color: #991b1b; }
       .bgs-theme-pixel .bgs-btn-primary {
-        background: linear-gradient(135deg, #dc2626, #991b1b);
-        border: 2px solid #fca5a5;
-        border-radius: 10px;
+        background: linear-gradient(135deg, #e11d48, #be123c);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(220, 38, 38, 0.6);
-        text-shadow: 1px 1px 0 #7f1d1d;
+        box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
       }
       .bgs-theme-pixel .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #ef4444, #b91c1c);
+        background: linear-gradient(135deg, #be123c, #9f1239);
       }
       .bgs-theme-pixel .bgs-badge-success {
-        background: rgba(245, 158, 11, 0.2);
-        border: 2.5px solid #fbbf24;
-        color: #fef08a;
-        text-shadow: 1px 1px 0 #78350f;
-        box-shadow: 0 0 18px rgba(251, 191, 36, 0.4);
+        background: #ecfdf5;
+        border: 2px solid #10b981;
+        color: #047857;
       }
       .bgs-theme-pixel .bgs-btn-stage2-extra {
         background: linear-gradient(135deg, #f59e0b, #d97706);
-        border: 2px solid #fef08a;
-        border-radius: 10px;
         color: #ffffff;
-        text-shadow: 1px 1px 0 #78350f;
-        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.5);
+        box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
       }
       .bgs-theme-pixel .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #dc2626, #991b1b);
-        border: 2px solid #fca5a5;
-        border-radius: 10px;
+        background: linear-gradient(135deg, #475569, #334155);
         color: #ffffff;
-        text-shadow: 1px 1px 0 #7f1d1d;
-        box-shadow: 0 4px 14px rgba(220, 38, 38, 0.5);
+        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
       }
       .bgs-theme-pixel .bgs-checklist-card {
-        background: #20111a;
-        border: 2.5px solid #f59e0b;
-        border-radius: 12px;
-        box-shadow: inset 0 0 12px rgba(245, 158, 11, 0.25);
+        background: #fffbeb;
+        border: 2px solid #f59e0b;
       }
       .bgs-theme-pixel .bgs-checklist-title {
-        color: #fbbf24;
-        text-shadow: 1px 1px 0 #78350f;
+        color: #92400e;
       }
       .bgs-theme-pixel .bgs-checklist-item {
-        background: #2c1624;
-        border: 1.5px solid #78350f;
-        border-radius: 8px;
+        background: #ffffff;
+        border: 1px solid #fde68a;
       }
-      .bgs-theme-pixel .bgs-checklist-item strong { color: #fde047; }
-      .bgs-theme-pixel .bgs-checklist-item p { color: #fde68a; }
+      .bgs-theme-pixel .bgs-checklist-item strong { color: #92400e; }
+      .bgs-theme-pixel .bgs-checklist-item p { color: #78350f; }
       .bgs-theme-pixel .bgs-hardware-notice {
-        background: rgba(220, 38, 38, 0.22);
-        border: 1.5px dashed #f87171;
-        border-radius: 8px;
-        color: #fecaca;
+        background: #fff7ed;
+        border: 1.5px dashed #ea580c;
+        color: #9a3412;
       }
 
       /* ==========================================================================
-         🎨 3. NATURE 主題 (森林萌系大地風)
+         🎨 3. NATURE 主題 (清新抹茶白 · 明亮高對比版)
          ========================================================================== */
       .bgs-theme-nature {
-        background: #0c1e13;
-        border: 2.5px solid #22c55e;
-        border-radius: 26px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(34, 197, 94, 0.35);
+        background: #ffffff;
+        border: 2.5px solid #16a34a;
+        border-radius: 24px;
+        box-shadow: 0 20px 45px -10px rgba(22, 163, 74, 0.2), 0 0 0 1px rgba(22, 163, 74, 0.08);
       }
       .bgs-theme-nature .bgs-title {
-        color: #4ade80;
-        text-shadow: 0 0 12px rgba(74, 222, 128, 0.45);
+        color: #15803d;
+        text-shadow: none;
+        font-weight: 900;
       }
-      .bgs-theme-nature .bgs-subtitle { color: #a7f3d0; }
-      .bgs-theme-nature .bgs-label { color: #bbf7d0; }
+      .bgs-theme-nature .bgs-subtitle { color: #4b5563; font-weight: 600; }
+      .bgs-theme-nature .bgs-label { color: #14532d; font-weight: 700; }
       .bgs-theme-nature .bgs-input, .bgs-theme-nature .bgs-select {
-        background: #132e1f;
-        border: 1.5px solid #166534;
-        border-radius: 14px;
-        color: #f0fdf4;
+        background: #f0fdf4;
+        border: 1.5px solid #86efac;
+        color: #14532d;
+        font-weight: 600;
       }
       .bgs-theme-nature .bgs-input:focus, .bgs-theme-nature .bgs-select:focus {
-        border-color: #22c55e;
-        box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+        border-color: #16a34a;
+        box-shadow: 0 0 10px rgba(22, 163, 74, 0.28);
       }
       .bgs-theme-nature .bgs-theme-tag {
-        background: rgba(34, 197, 94, 0.18);
-        border: 1.5px solid #22c55e;
-        color: #86efac;
+        background: #dcfce7;
+        border: 1.5px solid #16a34a;
+        color: #15803d;
+        font-weight: 800;
       }
       .bgs-theme-nature .bgs-unit-badge {
-        background: rgba(34, 197, 94, 0.15);
-        border: 1.5px solid #22c55e;
-        color: #86efac;
+        background: #f0fdf4;
+        border: 1.5px solid #16a34a;
+        color: #15803d;
+        font-weight: 800;
       }
       .bgs-theme-nature .bgs-contract-box {
-        background: rgba(234, 88, 12, 0.12);
-        border: 1.5px dashed #f97316;
-        border-radius: 16px;
+        background: #fff7ed;
+        border: 1.5px dashed #ea580c;
       }
-      .bgs-theme-nature .bgs-contract-title { color: #fdba74; }
-      .bgs-theme-nature .bgs-contract-item { color: #fed7aa; }
+      .bgs-theme-nature .bgs-contract-title { color: #c2410c; font-weight: 800; }
+      .bgs-theme-nature .bgs-contract-item { color: #9a3412; }
       .bgs-theme-nature .bgs-btn-primary {
         background: linear-gradient(135deg, #16a34a, #15803d);
-        border: 1.5px solid #86efac;
-        border-radius: 16px;
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.5);
+        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.32);
       }
       .bgs-theme-nature .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #22c55e, #16a34a);
+        background: linear-gradient(135deg, #15803d, #14532d);
       }
       .bgs-theme-nature .bgs-badge-success {
-        background: rgba(34, 197, 94, 0.18);
-        border: 2.5px solid #22c55e;
-        color: #86efac;
-        box-shadow: 0 0 16px rgba(34, 197, 94, 0.3);
+        background: #f0fdf4;
+        border: 2px solid #16a34a;
+        color: #15803d;
       }
       .bgs-theme-nature .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #ca8a04, #a16207);
-        border: 1.5px solid #fef08a;
-        border-radius: 16px;
+        background: linear-gradient(135deg, #059669, #047857);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(202, 138, 4, 0.45);
+        box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
       }
       .bgs-theme-nature .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #15803d, #14532d);
-        border: 1.5px solid #86efac;
-        border-radius: 16px;
+        background: linear-gradient(135deg, #334155, #1e293b);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(21, 128, 61, 0.45);
+        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
       }
       .bgs-theme-nature .bgs-checklist-card {
-        background: #0d2217;
-        border: 2px solid #22c55e;
-        border-radius: 20px;
-        box-shadow: 0 0 16px rgba(34, 197, 94, 0.2);
+        background: #f0fdf4;
+        border: 2px solid #86efac;
       }
-      .bgs-theme-nature .bgs-checklist-title { color: #4ade80; }
+      .bgs-theme-nature .bgs-checklist-title { color: #15803d; }
       .bgs-theme-nature .bgs-checklist-item {
-        background: #143222;
-        border: 1px solid #166534;
-        border-radius: 12px;
+        background: #ffffff;
+        border: 1px solid #bbf7d0;
       }
-      .bgs-theme-nature .bgs-checklist-item strong { color: #86efac; }
-      .bgs-theme-nature .bgs-checklist-item p { color: #bbf7d0; }
+      .bgs-theme-nature .bgs-checklist-item strong { color: #15803d; }
+      .bgs-theme-nature .bgs-checklist-item p { color: #14532d; }
       .bgs-theme-nature .bgs-hardware-notice {
-        background: rgba(234, 179, 8, 0.15);
-        border: 1.5px dashed #eab308;
-        border-radius: 12px;
-        color: #fef08a;
+        background: #fff7ed;
+        border: 1.5px dashed #ea580c;
+        color: #9a3412;
       }
 
       /* ==========================================================================
-         🎨 4. FANTASY 主題 (中古奇幻冒險風)
+         🎨 4. FANTASY 主題 (中古羊皮紙白 · 明亮高對比版)
          ========================================================================== */
       .bgs-theme-fantasy {
-        background: #1c130d;
-        border: 2.5px solid #d97706;
+        background: #fefcf6;
+        border: 2.5px solid #b45309;
         border-radius: 20px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 25px rgba(217, 119, 6, 0.35), inset 0 0 20px rgba(180, 83, 9, 0.25);
+        box-shadow: 0 20px 45px -10px rgba(180, 83, 9, 0.22), 0 0 0 1px rgba(180, 83, 9, 0.1);
       }
       .bgs-theme-fantasy .bgs-title {
-        color: #fde047;
-        text-shadow: 1px 1px 2px #78350f, 0 0 12px rgba(253, 224, 71, 0.45);
-        letter-spacing: 0.5px;
+        color: #78350f;
+        text-shadow: none;
+        font-family: Georgia, "Microsoft JhengHei", serif;
+        font-weight: 900;
       }
-      .bgs-theme-fantasy .bgs-subtitle { color: #fed7aa; }
-      .bgs-theme-fantasy .bgs-label { color: #fde68a; }
+      .bgs-theme-fantasy .bgs-subtitle { color: #64748b; font-weight: 600; }
+      .bgs-theme-fantasy .bgs-label { color: #451a03; font-weight: 700; }
       .bgs-theme-fantasy .bgs-input, .bgs-theme-fantasy .bgs-select {
-        background: #2a1b12;
-        border: 1.5px solid #92400e;
-        border-radius: 10px;
-        color: #fef3c7;
+        background: #ffffff;
+        border: 1.5px solid #d4d4d8;
+        color: #451a03;
+        font-weight: 600;
       }
       .bgs-theme-fantasy .bgs-input:focus, .bgs-theme-fantasy .bgs-select:focus {
-        border-color: #d97706;
-        box-shadow: 0 0 12px rgba(217, 119, 6, 0.55);
+        border-color: #b45309;
+        box-shadow: 0 0 10px rgba(180, 83, 9, 0.28);
       }
       .bgs-theme-fantasy .bgs-theme-tag {
-        background: rgba(217, 119, 6, 0.2);
-        border: 1.5px solid #d97706;
-        color: #fde68a;
+        background: #fef3c7;
+        border: 1.5px solid #b45309;
+        color: #78350f;
+        font-weight: 800;
       }
       .bgs-theme-fantasy .bgs-unit-badge {
-        background: rgba(217, 119, 6, 0.16);
-        border: 1.5px solid #d97706;
-        color: #fde68a;
+        background: #fffbeb;
+        border: 1.5px solid #b45309;
+        color: #78350f;
+        font-weight: 800;
       }
       .bgs-theme-fantasy .bgs-contract-box {
-        background: rgba(180, 83, 9, 0.16);
-        border: 1.5px dashed #f59e0b;
-        border-radius: 12px;
+        background: #fffbeb;
+        border: 1.5px dashed #b45309;
       }
-      .bgs-theme-fantasy .bgs-contract-title { color: #fde047; }
-      .bgs-theme-fantasy .bgs-contract-item { color: #fef3c7; }
+      .bgs-theme-fantasy .bgs-contract-title { color: #78350f; font-weight: 800; }
+      .bgs-theme-fantasy .bgs-contract-item { color: #451a03; }
       .bgs-theme-fantasy .bgs-btn-primary {
         background: linear-gradient(135deg, #b45309, #78350f);
-        border: 1.5px solid #fde68a;
-        border-radius: 12px;
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(180, 83, 9, 0.5);
+        box-shadow: 0 4px 14px rgba(180, 83, 9, 0.32);
       }
       .bgs-theme-fantasy .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #d97706, #92400e);
+        background: linear-gradient(135deg, #78350f, #451a03);
       }
       .bgs-theme-fantasy .bgs-badge-success {
-        background: rgba(217, 119, 6, 0.2);
-        border: 2.5px solid #d97706;
-        color: #fde68a;
-        box-shadow: 0 0 16px rgba(217, 119, 6, 0.3);
+        background: #fefce8;
+        border: 2px solid #b45309;
+        color: #78350f;
       }
       .bgs-theme-fantasy .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #d97706, #b45309);
-        border: 1.5px solid #fde68a;
-        border-radius: 12px;
+        background: linear-gradient(135deg, #d97706, #92400e);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(217, 119, 6, 0.5);
+        box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
       }
       .bgs-theme-fantasy .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #78350f, #451a03);
-        border: 1.5px solid #d97706;
-        border-radius: 12px;
+        background: linear-gradient(135deg, #334155, #1e293b);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(120, 53, 15, 0.5);
+        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
       }
       .bgs-theme-fantasy .bgs-checklist-card {
-        background: #241710;
+        background: #fffbeb;
         border: 2px solid #d97706;
-        border-radius: 16px;
-        box-shadow: 0 0 16px rgba(217, 119, 6, 0.25);
       }
-      .bgs-theme-fantasy .bgs-checklist-title { color: #fde047; }
+      .bgs-theme-fantasy .bgs-checklist-title { color: #78350f; }
       .bgs-theme-fantasy .bgs-checklist-item {
-        background: #311f15;
-        border: 1px solid #78350f;
-        border-radius: 10px;
+        background: #ffffff;
+        border: 1px solid #fde68a;
       }
-      .bgs-theme-fantasy .bgs-checklist-item strong { color: #fde68a; }
-      .bgs-theme-fantasy .bgs-checklist-item p { color: #fef3c7; }
+      .bgs-theme-fantasy .bgs-checklist-item strong { color: #78350f; }
+      .bgs-theme-fantasy .bgs-checklist-item p { color: #451a03; }
       .bgs-theme-fantasy .bgs-hardware-notice {
-        background: rgba(217, 119, 6, 0.2);
-        border: 1.5px dashed #d97706;
-        border-radius: 10px;
-        color: #fde68a;
+        background: #fff7ed;
+        border: 1.5px dashed #ea580c;
+        color: #9a3412;
       }
 
       /* ==========================================================================
-         🎨 5. WARM 主題 (暖心工坊食堂風)
+         🎨 5. WARM 主題 (暖日和風工坊 · 明亮高對比版)
          ========================================================================== */
       .bgs-theme-warm {
-        background: #21140e;
+        background: #faf7f2;
         border: 2.5px solid #ea580c;
         border-radius: 22px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(234, 88, 12, 0.35);
+        box-shadow: 0 20px 45px -10px rgba(234, 88, 12, 0.2), 0 0 0 1px rgba(234, 88, 12, 0.08);
       }
       .bgs-theme-warm .bgs-title {
-        color: #fb923c;
-        text-shadow: 0 0 12px rgba(251, 146, 60, 0.45);
+        color: #9a3412;
+        text-shadow: none;
+        font-weight: 900;
       }
-      .bgs-theme-warm .bgs-subtitle { color: #fed7aa; }
-      .bgs-theme-warm .bgs-label { color: #ffedd5; }
+      .bgs-theme-warm .bgs-subtitle { color: #64748b; font-weight: 600; }
+      .bgs-theme-warm .bgs-label { color: #431407; font-weight: 700; }
       .bgs-theme-warm .bgs-input, .bgs-theme-warm .bgs-select {
-        background: #2e1b13;
-        border: 1.5px solid #9a3412;
-        border-radius: 12px;
-        color: #fff7ed;
+        background: #ffffff;
+        border: 1.5px solid #fed7aa;
+        color: #431407;
+        font-weight: 600;
       }
       .bgs-theme-warm .bgs-input:focus, .bgs-theme-warm .bgs-select:focus {
         border-color: #ea580c;
-        box-shadow: 0 0 12px rgba(234, 88, 12, 0.55);
+        box-shadow: 0 0 10px rgba(234, 88, 12, 0.28);
       }
       .bgs-theme-warm .bgs-theme-tag {
-        background: rgba(234, 88, 12, 0.2);
+        background: #ffedd5;
         border: 1.5px solid #ea580c;
-        color: #fdba74;
+        color: #c2410c;
+        font-weight: 800;
       }
       .bgs-theme-warm .bgs-unit-badge {
-        background: rgba(234, 88, 12, 0.16);
+        background: #fff7ed;
         border: 1.5px solid #ea580c;
-        color: #fdba74;
+        color: #c2410c;
+        font-weight: 800;
       }
       .bgs-theme-warm .bgs-contract-box {
-        background: rgba(194, 65, 12, 0.16);
-        border: 1.5px dashed #f97316;
-        border-radius: 14px;
+        background: #fff7ed;
+        border: 1.5px dashed #ea580c;
       }
-      .bgs-theme-warm .bgs-contract-title { color: #fdba74; }
-      .bgs-theme-warm .bgs-contract-item { color: #ffedd5; }
+      .bgs-theme-warm .bgs-contract-title { color: #c2410c; font-weight: 800; }
+      .bgs-theme-warm .bgs-contract-item { color: #7c2d12; }
       .bgs-theme-warm .bgs-btn-primary {
         background: linear-gradient(135deg, #ea580c, #c2410c);
-        border: 1.5px solid #fed7aa;
-        border-radius: 14px;
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(234, 88, 12, 0.5);
+        box-shadow: 0 4px 14px rgba(234, 88, 12, 0.32);
       }
       .bgs-theme-warm .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #f97316, #ea580c);
+        background: linear-gradient(135deg, #c2410c, #9a3412);
       }
       .bgs-theme-warm .bgs-badge-success {
-        background: rgba(234, 88, 12, 0.2);
-        border: 2.5px solid #ea580c;
-        color: #fdba74;
-        box-shadow: 0 0 16px rgba(234, 88, 12, 0.3);
+        background: #fefce8;
+        border: 2px solid #ea580c;
+        color: #9a3412;
       }
       .bgs-theme-warm .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        border: 1.5px solid #fef08a;
-        border-radius: 14px;
+        background: linear-gradient(135deg, #d97706, #b45309);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.45);
+        box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
       }
       .bgs-theme-warm .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #c2410c, #9a3412);
-        border: 1.5px solid #fdba74;
-        border-radius: 14px;
+        background: linear-gradient(135deg, #334155, #1e293b);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(194, 65, 12, 0.45);
+        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
       }
       .bgs-theme-warm .bgs-checklist-card {
-        background: #2a1811;
-        border: 2px solid #ea580c;
-        border-radius: 18px;
-        box-shadow: 0 0 16px rgba(234, 88, 12, 0.25);
+        background: #fff7ed;
+        border: 2px solid #fed7aa;
       }
-      .bgs-theme-warm .bgs-checklist-title { color: #fb923c; }
+      .bgs-theme-warm .bgs-checklist-title { color: #9a3412; }
       .bgs-theme-warm .bgs-checklist-item {
-        background: #382017;
-        border: 1px solid #9a3412;
-        border-radius: 12px;
+        background: #ffffff;
+        border: 1px solid #fed7aa;
       }
-      .bgs-theme-warm .bgs-checklist-item strong { color: #fdba74; }
-      .bgs-theme-warm .bgs-checklist-item p { color: #fed7aa; }
+      .bgs-theme-warm .bgs-checklist-item strong { color: #9a3412; }
+      .bgs-theme-warm .bgs-checklist-item p { color: #7c2d12; }
       .bgs-theme-warm .bgs-hardware-notice {
-        background: rgba(245, 158, 11, 0.18);
-        border: 1.5px dashed #f59e0b;
-        border-radius: 12px;
-        color: #fed7aa;
+        background: #fff7ed;
+        border: 1.5px dashed #ea580c;
+        color: #9a3412;
       }
     `;
     document.head.appendChild(style);
@@ -1149,11 +1100,11 @@
         <p class="bgs-subtitle">${theme.confirmSubtitle}</p>
 
         <div style="background:${theme.badgeBg}; border:1.5px solid ${theme.cardBorder}; border-radius:14px; padding:12px; text-align:center; margin-bottom:14px;">
-          <div style="font-size:0.85rem; color:#cbd5e1;">登錄身分確認</div>
+          <div style="font-size:0.85rem; color:#64748b; font-weight:700;">登錄身分確認</div>
           <div style="font-size:1.45rem; font-weight:900; color:${theme.accentColor}; margin:4px 0;">
             ${currentStudent.class} 班級　${currentStudent.seat} 座號
           </div>
-          <div style="font-size:1.15rem; font-weight:800; color:#ffffff;">
+          <div style="font-size:1.15rem; font-weight:800; color:#0f172a;">
             姓名：${currentStudent.name}
           </div>
           ${options.hideUnit ? '' : `
@@ -1322,13 +1273,13 @@
         <p class="bgs-subtitle">${options.gameTitle || '課堂生物挑戰'}</p>
 
         <div style="background:${theme.badgeBg}; border:1.5px solid ${theme.cardBorder}; border-radius:14px; padding:12px; text-align:center; margin-bottom:14px;">
-          <div style="font-size:0.85rem; color:#cbd5e1;">
+          <div style="font-size:0.85rem; color:#475569; font-weight:700;">
             選手：${currentStudent.class} - ${currentStudent.seat} ${currentStudent.name}
           </div>
           <div style="font-size:1.9rem; font-weight:900; color:${theme.accentColor}; margin:4px 0;">
             ${scoreDisplay}
           </div>
-          <div style="font-size:0.82rem; color:#cbd5e1;">⏱️ 耗時：${duration}</div>
+          <div style="font-size:0.82rem; color:#64748b; font-weight:600;">⏱️ 耗時：${duration}</div>
         </div>
 
         <!-- 🔹 階段一：自動送出 ＋ 絕對鎖死狀態容器 -->
@@ -1340,8 +1291,8 @@
 
         <!-- 🔹 階段二：雙軌選擇 (學霸加碼 vs 提前交卷) 動態展開區 -->
         <div id="bgsStage2Box" style="display:none; animation: bgsFadeDown 0.35s ease;">
-          <div style="margin: 16px 0 10px; border-top: 1px dashed rgba(255,255,255,0.15);"></div>
-          <div style="font-size:0.85rem; color:#cbd5e1; text-align:center; margin-bottom:8px;">
+          <div style="margin: 16px 0 10px; border-top: 1px dashed rgba(0,0,0,0.12);"></div>
+          <div style="font-size:0.85rem; color:#475569; font-weight:700; text-align:center; margin-bottom:8px;">
             請選擇下一步行動：
           </div>
           <button type="button" class="bgs-btn bgs-btn-stage2-extra" id="bgsBtnExtra">
@@ -1502,7 +1453,7 @@
         <div class="bgs-card bgs-theme-${theme.id}" style="text-align:center; padding:32px 20px;">
           <div style="font-size:3.5rem; margin-bottom:12px;">🔒</div>
           <h2 style="color:${theme.accentColor}; font-size:1.4rem; margin-bottom:8px;">載具已安全鎖定</h2>
-          <p style="color:#cbd5e1; font-size:0.92rem; line-height:1.6; margin-bottom:20px;">
+          <p style="color:#475569; font-size:0.92rem; line-height:1.6; margin-bottom:20px;">
             上一班挑戰紀錄已安全抹除！<br>
             請依座號將平板放回充電車，<strong>充電口朝外</strong>並插妥充電線。
           </p>
