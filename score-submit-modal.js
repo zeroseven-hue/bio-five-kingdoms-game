@@ -1,6 +1,6 @@
 /**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
- * 版本: v3.8 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
+ * 版本: v3.9 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
  * 
  * 🎨 五大情境主題（外觀自動隨遊戲調配，底層標準 100% 嚴格統一）：
  * 1. 🕹️ 復古像素街機風 (Pixel) - 瑪利歐 (mario)、小精靈 (pacman)、下樓梯 (shaft)
@@ -940,7 +940,39 @@
     const params = new URLSearchParams(window.location.search);
     const urlUnit = params.get('unit') || params.get('file');
     const isDispatch = !!urlUnit;
-    const unitTitle = options.unitTitle || (isDispatch ? `課堂指定單元 (${urlUnit})` : '[7上] 1-1 生命現象');
+
+    // 大廳二或獨立專案嚴格檢測 (含本機與 GitHub Pages 網址)
+    const isStandalone = !!(options.isStandalone || options.fixedUnit ||
+      location.href.includes('bio-standalone-games') ||
+      location.href.includes('bio-digestive-game') ||
+      location.href.includes('bio-five-kingdoms-game') ||
+      location.href.includes('boba-reaction-game') ||
+      location.pathname.includes('digestive') ||
+      location.pathname.includes('five-kingdoms') ||
+      location.pathname.includes('boba') ||
+      document.title.includes('消化') ||
+      document.title.includes('五界') ||
+      document.title.includes('珍奶') ||
+      (options.gameTitle && (options.gameTitle.includes('消化') || options.gameTitle.includes('五界') || options.gameTitle.includes('珍奶'))));
+
+    let standaloneUnitName = options.unitTitle || '';
+    if (isStandalone && !standaloneUnitName) {
+      const gTitle = (options.gameTitle || '').toLowerCase();
+      const docTitle = (document.title || '').toLowerCase();
+      const hrefStr = (location.href || '').toLowerCase();
+
+      if (docTitle.includes('消化') || hrefStr.includes('digestive') || gTitle.includes('消化')) {
+        standaloneUnitName = '專屬任務：人體消化系統冒險';
+      } else if (docTitle.includes('五界') || hrefStr.includes('five-kingdoms') || hrefStr.includes('kingdom') || gTitle.includes('五界')) {
+        standaloneUnitName = '專屬任務：五界生物分類研究';
+      } else if (docTitle.includes('珍奶') || hrefStr.includes('boba') || gTitle.includes('珍奶')) {
+        standaloneUnitName = '專屬任務：神經刺激與反應時間實驗';
+      } else {
+        standaloneUnitName = '專屬任務：課堂生物探索';
+      }
+    }
+
+    const unitTitle = isStandalone ? standaloneUnitName : (options.unitTitle || (isDispatch ? `課堂指定單元 (${urlUnit})` : '[7上] 1-1 生命現象'));
 
     // 10 分鐘中斷暫存恢復
     const savedSessionRaw = sessionStorage.getItem('bgs_active_session');
@@ -1006,7 +1038,15 @@
           <input type="text" class="bgs-input" id="bgsNameInput" placeholder="請輸入真實全名，請勿填寫暱稱" maxlength="15" required />
         </div>
 
-        ${options.hideUnit ? '' : (isDispatch ? `
+        ${isStandalone ? `
+          <div class="bgs-form-group">
+            <label class="bgs-label">挑戰主題</label>
+            <div class="bgs-unit-badge">
+              <span>🎯</span>
+              <span>${standaloneUnitName}</span>
+            </div>
+          </div>
+        ` : (options.hideUnit ? '' : (isDispatch ? `
           <div class="bgs-form-group">
             <label class="bgs-label">挑戰單元 (老師派卷指定)</label>
             <div class="bgs-unit-badge">
@@ -1027,7 +1067,7 @@
               <option value="unit07_homeostasis">[7上] 6-1 呼吸體溫恆定與排泄</option>
             </select>
           </div>
-        `)}
+        `))}
 
         <button type="button" class="bgs-btn bgs-btn-primary" id="bgsBtnNext">${theme.loginBtnText || '下一步：核對身分與公約 ➜'}</button>
       </div>
@@ -1053,12 +1093,15 @@
         return;
       }
 
+      const chosenUnit = isStandalone ? 'standalone_fixed' : (isDispatch ? urlUnit : (overlay.querySelector('#bgsUnitSelect')?.value || 'unit01_scientific_method'));
+      const chosenUnitTitle = isStandalone ? standaloneUnitName : (isDispatch ? unitTitle : (overlay.querySelector('#bgsUnitSelect')?.selectedOptions[0]?.text || unitTitle));
+
       currentStudent = {
         class: cls,
         seat: seat,
         name: name,
-        unit: isDispatch ? urlUnit : (overlay.querySelector('#bgsUnitSelect')?.value || 'unit01_scientific_method'),
-        unitTitle: unitTitle,
+        unit: chosenUnit,
+        unitTitle: chosenUnitTitle,
         timestamp: Date.now(),
         inProgress: true
       };
@@ -1099,7 +1142,7 @@
           </div>
           ${options.hideUnit ? '' : `
             <div style="font-size:0.82rem; color:${theme.accentColor}; margin-top:4px;">
-              📚 單元：${currentStudent.unitTitle || '課堂指定單元'}
+              📚 挑戰主題：${currentStudent.unitTitle || '專屬任務'}
             </div>
           `}
         </div>
@@ -1498,12 +1541,14 @@
 
       // 判定是否為大廳二獨立遊戲 (隱藏單元)
       const isStandalone = location.href.includes('bio-standalone-games') || 
+                           location.href.includes('bio-digestive-game') ||
+                           location.href.includes('bio-five-kingdoms-game') ||
                            location.href.includes('人體消化') || 
                            location.href.includes('五界');
 
       showLogin({
         gameTitle: cleanTitle,
-        hideUnit: isStandalone,
+        hideUnit: false, // 獨立遊戲套用 Option B 鎖定專屬徽章
         onStart: (student) => {
           syncStudentToDom(student);
           isGameActive = true;
