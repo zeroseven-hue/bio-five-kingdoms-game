@@ -1,6 +1,6 @@
 /**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
- * 版本: v4.0 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
+ * 版本: v4.1 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
  * 
  * 🎨 五大情境主題（外觀自動隨遊戲調配，底層標準 100% 嚴格統一）：
  * 1. 🕹️ 復古像素街機風 (Pixel) - 瑪利歐 (mario)、小精靈 (pacman)、下樓梯 (shaft)
@@ -40,7 +40,7 @@
   try {
     const antiFlash = document.createElement('style');
     antiFlash.id = 'bgsAntiFlash';
-    antiFlash.textContent = '#setup-screen, #start-modal, #setupCard, .legacy-setup { display: none !important; }';
+    antiFlash.textContent = '#setup-screen, #start-modal, #setupCard, #startScreen, .legacy-setup { display: none !important; }';
     if (document.head) {
       document.head.appendChild(antiFlash);
     } else {
@@ -53,65 +53,74 @@
   } catch (_) {}
 
   // 🎨 五大情境主題設定檔
-  const THEME_CONFIGS = {
+    const THEME_CONFIGS = {
     pixel: {
       id: 'pixel',
-      name: '復古像素街機風',
-      icon: '🕹️',
-      subtitle: '8-BIT 復古街機模式 · 請輸入身分登入',
+      name: '活力童趣街機風 (明亮)',
+      icon: '🍄',
+      subtitle: '任天堂經典闖關 · 請輸入身分登入',
       confirmSubtitle: '防滑錯確認 · 準備投幣進入冒險世界',
       settleTitle: '🏆 關卡通關 CLEAR！',
       loginBtnText: '下一步：核對身分與公約 ➜',
-      startBtnText: '🕹️ 投幣出擊！遵守公約開始冒險',
-      accentColor: '#d97706', cardBorder: '#d97706', badgeBg: '#fef3c7'
+      startBtnText: '🍄 活力出擊！遵守公約開始冒險',
+      accentColor: '#d97706',
+      cardBorder: '#f59e0b',
+      badgeBg: '#fffbeb'
     },
     nature: {
       id: 'nature',
-      name: '森林萌系大地風',
+      name: '清新森林自然風 (明亮)',
       icon: '🌿',
       subtitle: '生態探險任務 · 請輸入身分登入',
       confirmSubtitle: '防滑錯確認 · 戴上探險帽準備出發',
       settleTitle: '🌻 生態調查圓滿完成！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🎒 踏上旅程！遵守公約出發探險',
-      accentColor: '#15803d', cardBorder: '#16a34a', badgeBg: '#dcfce7'
+      accentColor: '#16a34a',
+      cardBorder: '#22c55e',
+      badgeBg: '#f0fdf4'
     },
     fantasy: {
       id: 'fantasy',
-      name: '中古奇幻冒險風',
+      name: '典雅古羊皮紙公會 (明亮)',
       icon: '⚔️',
       subtitle: '冒險者公會登錄 · 請輸入身分登入',
       confirmSubtitle: '防滑錯確認 · 羊皮契約簽署即刻生效',
       settleTitle: '👑 勇者遠征大獲全勝！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🛡️ 拔出寶劍！遵守契約踏上征途',
-      accentColor: '#b45309', cardBorder: '#b45309', badgeBg: '#fef3c7'
+      accentColor: '#b45309',
+      cardBorder: '#d97706',
+      badgeBg: '#fefce8'
     },
     warm: {
       id: 'warm',
-      name: '暖心工坊食堂風',
+      name: '日系明亮暖木工坊 (明亮)',
       icon: '🍱',
       subtitle: '課堂實驗工坊 · 請輸入身分登入',
       confirmSubtitle: '防滑錯確認 · 主廚配方研究即將啟動',
       settleTitle: '🍵 特餐調配圓滿出爐！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🔥 開火上菜！遵守公約開始研究',
-      accentColor: '#ea580c', cardBorder: '#ea580c', badgeBg: '#ffedd5'
+      accentColor: '#ea580c',
+      cardBorder: '#f97316',
+      badgeBg: '#fff7ed'
     },
     scifi: {
       id: 'scifi',
-      name: '深空星艦科技風',
+      name: '深空星艦科技風 (深藍)',
       icon: '🚀',
       subtitle: '星艦生物資料庫 · 請輸入身分登入',
       confirmSubtitle: '防滑錯確認 · 避免成績登記至其他同學座號',
       settleTitle: '🏆 挑戰圓滿結算！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🚀 我已核對身分並遵守公約，開始出擊！',
-      accentColor: '#0284c7', cardBorder: '#0284c7', badgeBg: '#e0f2fe'
+      accentColor: '#38bdf8',
+      cardBorder: '#38bdf8',
+      badgeBg: 'rgba(56, 189, 248, 0.15)'
     }
   };
 
-  // 智慧主題解析函式
   function resolveTheme(options) {
     if (options && options.theme && THEME_CONFIGS[options.theme]) {
       return THEME_CONFIGS[options.theme];
@@ -168,7 +177,6 @@
       .bgs-overlay {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(15, 23, 42, 0.72);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
         display: flex;
@@ -184,14 +192,13 @@
         max-width: 480px;
         max-height: 92vh;
         overflow-y: auto;
-        padding: 24px 22px;
-        box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0, 0, 0, 0.05);
-        color: #1e293b;
+        padding: 26px 24px;
+        border-radius: 24px;
         animation: bgsPopIn 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         box-sizing: border-box;
       }
       @keyframes bgsPopIn {
-        from { transform: scale(0.88); opacity: 0; }
+        from { transform: scale(0.9); opacity: 0; }
         to { transform: scale(1); opacity: 1; }
       }
       @keyframes bgsFadeDown {
@@ -199,13 +206,13 @@
         to { opacity: 1; transform: translateY(0); }
       }
       .bgs-title {
-        font-size: 1.35rem;
+        font-size: 1.4rem;
         font-weight: 900;
         text-align: center;
         margin: 0 0 6px 0;
       }
       .bgs-subtitle {
-        font-size: 0.88rem;
+        font-size: 0.9rem;
         text-align: center;
         margin: 0 0 16px 0;
         line-height: 1.4;
@@ -222,28 +229,24 @@
       }
       .bgs-label {
         display: block;
-        font-size: 0.85rem;
-        font-weight: 700;
+        font-size: 0.88rem;
+        font-weight: 800;
         margin-bottom: 6px;
-        color: #cbd5e1;
       }
       .bgs-input, .bgs-select {
         width: 100%;
-        padding: 11px 14px;
+        padding: 12px 14px;
         border-radius: 12px;
-        font-size: 0.95rem;
+        font-size: 0.98rem;
+        font-weight: 600;
         box-sizing: border-box;
         outline: none;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      }
-      .bgs-input::placeholder {
-        color: #64748b;
-        font-size: 0.88rem;
+        transition: all 0.2s ease;
       }
       .bgs-unit-badge {
         border-radius: 12px;
-        padding: 10px 14px;
-        font-size: 0.92rem;
+        padding: 11px 14px;
+        font-size: 0.95rem;
         font-weight: 800;
         display: flex;
         align-items: center;
@@ -251,30 +254,30 @@
         margin-bottom: 14px;
       }
       .bgs-contract-box {
-        border-radius: 14px;
-        padding: 14px;
+        border-radius: 16px;
+        padding: 14px 16px;
         margin-bottom: 18px;
         text-align: left;
       }
       .bgs-contract-title {
-        font-size: 0.92rem;
-        font-weight: 800;
+        font-size: 0.95rem;
+        font-weight: 900;
         margin-bottom: 6px;
         display: flex;
         align-items: center;
         gap: 6px;
       }
       .bgs-contract-item {
-        font-size: 0.82rem;
-        line-height: 1.5;
+        font-size: 0.85rem;
+        line-height: 1.55;
         margin-bottom: 4px;
       }
       .bgs-btn {
         width: 100%;
-        padding: 13px;
+        padding: 14px;
         border-radius: 14px;
-        font-size: 1.02rem;
-        font-weight: 800;
+        font-size: 1.05rem;
+        font-weight: 900;
         border: none;
         cursor: pointer;
         display: flex;
@@ -287,39 +290,35 @@
       }
       .bgs-btn-subtle {
         background: #f1f5f9;
-        color: #334155;
-        border: 1.5px solid #cbd5e1;
-        font-size: 0.9rem;
-      }
-      .bgs-btn-subtle:hover {
-        background: #e2e8f0;
-        color: #0f172a;
+        color: #475569;
+        border: 1px solid #cbd5e1;
+        font-size: 0.92rem;
       }
       .bgs-btn-locked {
-        background: #f1f5f9 !important;
-        color: #64748b !important;
+        background: #e2e8f0 !important;
+        color: #94a3b8 !important;
         border: 1.5px solid #cbd5e1 !important;
         cursor: not-allowed !important;
         box-shadow: none !important;
       }
       .bgs-badge-success {
         border-radius: 16px;
-        padding: 14px;
+        padding: 15px;
         text-align: center;
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         font-weight: 900;
         margin-bottom: 14px;
         animation: bgsPopIn 0.3s ease;
       }
       .bgs-checklist-card {
         border-radius: 20px;
-        padding: 16px;
+        padding: 18px;
         margin-bottom: 16px;
         text-align: left;
         animation: bgsFadeDown 0.3s ease;
       }
       .bgs-checklist-title {
-        font-size: 1.05rem;
+        font-size: 1.1rem;
         font-weight: 900;
         margin-bottom: 12px;
         display: flex;
@@ -328,446 +327,464 @@
       }
       .bgs-checklist-item {
         border-radius: 12px;
-        padding: 10px 12px;
-        margin-bottom: 8px;
+        padding: 12px 14px;
+        margin-bottom: 9px;
       }
       .bgs-checklist-item strong {
         display: block;
-        font-size: 0.88rem;
+        font-size: 0.92rem;
+        font-weight: 800;
         margin-bottom: 3px;
       }
       .bgs-checklist-item p {
         margin: 0;
-        font-size: 0.8rem;
-        line-height: 1.4;
+        font-size: 0.84rem;
+        line-height: 1.45;
       }
       .bgs-hardware-notice {
         border-radius: 10px;
-        padding: 8px 12px;
-        font-size: 0.82rem;
+        padding: 10px 14px;
+        font-size: 0.85rem;
         font-weight: 800;
         text-align: center;
-        margin-top: 10px;
+        margin-top: 12px;
       }
 
       /* ==========================================================================
-         🎨 1. SCIFI 主題 (清透冰川科技白 · 明亮高對比版)
+         🎨 1. NATURE 主題 (清新明亮森林白) 🌿
          ========================================================================== */
-      .bgs-theme-scifi {
-        background: #ffffff;
-        border: 2.5px solid #0284c7;
-        border-radius: 24px;
-        box-shadow: 0 20px 45px -10px rgba(2, 132, 199, 0.22), 0 0 0 1px rgba(2, 132, 199, 0.08);
+      .bgs-overlay:has(.bgs-theme-nature) {
+        background: rgba(236, 253, 245, 0.85);
       }
-      .bgs-theme-scifi .bgs-title { color: #0369a1; text-shadow: none; font-weight: 900; }
-      .bgs-theme-scifi .bgs-subtitle { color: #64748b; font-weight: 600; }
-      .bgs-theme-scifi .bgs-label { color: #0f172a; font-weight: 700; }
-      .bgs-theme-scifi .bgs-input, .bgs-theme-scifi .bgs-select {
-        background: #f8fafc;
-        border: 1.5px solid #cbd5e1;
-        color: #0f172a;
-        font-weight: 600;
-      }
-      .bgs-theme-scifi .bgs-input:focus, .bgs-theme-scifi .bgs-select:focus {
-        border-color: #0284c7;
-        box-shadow: 0 0 10px rgba(2, 132, 199, 0.3);
-      }
-      .bgs-theme-scifi .bgs-theme-tag {
-        background: #e0f2fe;
-        border: 1.5px solid #0284c7;
-        color: #0369a1;
-        font-weight: 800;
-      }
-      .bgs-theme-scifi .bgs-unit-badge {
-        background: #f0f9ff;
-        border: 1.5px solid #0284c7;
-        color: #0369a1;
-        font-weight: 800;
-      }
-      .bgs-theme-scifi .bgs-contract-box {
-        background: #fef2f2;
-        border: 1.5px dashed #ef4444;
-      }
-      .bgs-theme-scifi .bgs-contract-title { color: #b91c1c; font-weight: 800; }
-      .bgs-theme-scifi .bgs-contract-item { color: #991b1b; }
-      .bgs-theme-scifi .bgs-btn-primary {
-        background: linear-gradient(135deg, #0284c7, #0369a1);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.32);
-      }
-      .bgs-theme-scifi .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #0369a1, #075985);
-      }
-      .bgs-theme-scifi .bgs-badge-success {
-        background: #f0fdf4;
-        border: 2px solid #0284c7;
-        color: #0369a1;
-      }
-      .bgs-theme-scifi .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #0d9488, #0f766e);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
-      }
-      .bgs-theme-scifi .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #334155, #1e293b);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
-      }
-      .bgs-theme-scifi .bgs-checklist-card {
-        background: #f0f9ff;
-        border: 2px solid #bae6fd;
-      }
-      .bgs-theme-scifi .bgs-checklist-title { color: #0369a1; }
-      .bgs-theme-scifi .bgs-checklist-item {
-        background: #ffffff;
-        border: 1px solid #bae6fd;
-      }
-      .bgs-theme-scifi .bgs-checklist-item strong { color: #0369a1; }
-      .bgs-theme-scifi .bgs-checklist-item p { color: #0f172a; }
-      .bgs-theme-scifi .bgs-hardware-notice {
-        background: #fff7ed;
-        border: 1.5px dashed #ea580c;
-        color: #9a3412;
-      }
-
-      /* ==========================================================================
-         🎨 2. PIXEL 主題 (復古金屬街機白 · 明亮高對比版)
-         ========================================================================== */
-      .bgs-theme-pixel {
-        background: #ffffff;
-        border: 3px solid #d97706;
-        border-radius: 20px;
-        box-shadow: 0 20px 45px -10px rgba(217, 119, 6, 0.22), 0 0 0 1px rgba(217, 119, 6, 0.1);
-      }
-      .bgs-theme-pixel .bgs-title {
-        color: #92400e;
-        text-shadow: none;
-        letter-spacing: 0.05em;
-        font-weight: 900;
-      }
-      .bgs-theme-pixel .bgs-subtitle { color: #78350f; font-weight: 600; }
-      .bgs-theme-pixel .bgs-label { color: #451a03; font-weight: 700; }
-      .bgs-theme-pixel .bgs-input, .bgs-theme-pixel .bgs-select {
-        background: #fffbeb;
-        border: 2px solid #fcd34d;
-        color: #451a03;
-        font-weight: 600;
-      }
-      .bgs-theme-pixel .bgs-input:focus, .bgs-theme-pixel .bgs-select:focus {
-        border-color: #d97706;
-        box-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
-      }
-      .bgs-theme-pixel .bgs-theme-tag {
-        background: #fef3c7;
-        border: 1.5px solid #d97706;
-        color: #92400e;
-        font-weight: 800;
-      }
-      .bgs-theme-pixel .bgs-unit-badge {
-        background: #fffbeb;
-        border: 2px solid #d97706;
-        color: #92400e;
-        font-weight: 800;
-      }
-      .bgs-theme-pixel .bgs-contract-box {
-        background: #fef2f2;
-        border: 2px dashed #ef4444;
-      }
-      .bgs-theme-pixel .bgs-contract-title { color: #b91c1c; font-weight: 800; }
-      .bgs-theme-pixel .bgs-contract-item { color: #991b1b; }
-      .bgs-theme-pixel .bgs-btn-primary {
-        background: linear-gradient(135deg, #e11d48, #be123c);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
-      }
-      .bgs-theme-pixel .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #be123c, #9f1239);
-      }
-      .bgs-theme-pixel .bgs-badge-success {
-        background: #ecfdf5;
-        border: 2px solid #10b981;
-        color: #047857;
-      }
-      .bgs-theme-pixel .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
-      }
-      .bgs-theme-pixel .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #475569, #334155);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
-      }
-      .bgs-theme-pixel .bgs-checklist-card {
-        background: #fffbeb;
-        border: 2px solid #f59e0b;
-      }
-      .bgs-theme-pixel .bgs-checklist-title {
-        color: #92400e;
-      }
-      .bgs-theme-pixel .bgs-checklist-item {
-        background: #ffffff;
-        border: 1px solid #fde68a;
-      }
-      .bgs-theme-pixel .bgs-checklist-item strong { color: #92400e; }
-      .bgs-theme-pixel .bgs-checklist-item p { color: #78350f; }
-      .bgs-theme-pixel .bgs-hardware-notice {
-        background: #fff7ed;
-        border: 1.5px dashed #ea580c;
-        color: #9a3412;
-      }
-
-      /* ==========================================================================
-         🎨 3. NATURE 主題 (清新抹茶白 · 明亮高對比版)
-         ========================================================================== */
       .bgs-theme-nature {
         background: #ffffff;
-        border: 2.5px solid #16a34a;
-        border-radius: 24px;
-        box-shadow: 0 20px 45px -10px rgba(22, 163, 74, 0.2), 0 0 0 1px rgba(22, 163, 74, 0.08);
+        border: 3px solid #22c55e;
+        border-radius: 26px;
+        box-shadow: 0 25px 60px rgba(22, 163, 74, 0.2), 0 4px 16px rgba(0,0,0,0.06);
+        color: #14532d;
       }
-      .bgs-theme-nature .bgs-title {
-        color: #15803d;
-        text-shadow: none;
-        font-weight: 900;
-      }
-      .bgs-theme-nature .bgs-subtitle { color: #4b5563; font-weight: 600; }
-      .bgs-theme-nature .bgs-label { color: #14532d; font-weight: 700; }
+      .bgs-theme-nature .bgs-title { color: #15803d; text-shadow: none; }
+      .bgs-theme-nature .bgs-subtitle { color: #166534; }
+      .bgs-theme-nature .bgs-label { color: #14532d; }
       .bgs-theme-nature .bgs-input, .bgs-theme-nature .bgs-select {
         background: #f0fdf4;
-        border: 1.5px solid #86efac;
+        border: 2px solid #86efac;
         color: #14532d;
-        font-weight: 600;
       }
+      .bgs-theme-nature .bgs-input::placeholder { color: #86efac; }
       .bgs-theme-nature .bgs-input:focus, .bgs-theme-nature .bgs-select:focus {
-        border-color: #16a34a;
-        box-shadow: 0 0 10px rgba(22, 163, 74, 0.28);
+        border-color: #22c55e;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
       }
       .bgs-theme-nature .bgs-theme-tag {
         background: #dcfce7;
-        border: 1.5px solid #16a34a;
+        border: 1.5px solid #22c55e;
         color: #15803d;
-        font-weight: 800;
       }
       .bgs-theme-nature .bgs-unit-badge {
         background: #f0fdf4;
-        border: 1.5px solid #16a34a;
+        border: 2px solid #22c55e;
         color: #15803d;
-        font-weight: 800;
       }
       .bgs-theme-nature .bgs-contract-box {
         background: #fff7ed;
-        border: 1.5px dashed #ea580c;
+        border: 2px dashed #f97316;
       }
-      .bgs-theme-nature .bgs-contract-title { color: #c2410c; font-weight: 800; }
+      .bgs-theme-nature .bgs-contract-title { color: #c2410c; }
       .bgs-theme-nature .bgs-contract-item { color: #9a3412; }
       .bgs-theme-nature .bgs-btn-primary {
-        background: linear-gradient(135deg, #16a34a, #15803d);
+        background: linear-gradient(135deg, #22c55e, #16a34a);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.32);
+        box-shadow: 0 6px 20px rgba(22, 163, 74, 0.35);
       }
       .bgs-theme-nature .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #15803d, #14532d);
+        background: linear-gradient(135deg, #16a34a, #15803d);
       }
       .bgs-theme-nature .bgs-badge-success {
         background: #f0fdf4;
-        border: 2px solid #16a34a;
+        border: 2.5px solid #22c55e;
         color: #15803d;
+        box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
       }
       .bgs-theme-nature .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #059669, #047857);
+        background: linear-gradient(135deg, #eab308, #ca8a04);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
+        box-shadow: 0 4px 14px rgba(202, 138, 4, 0.35);
       }
       .bgs-theme-nature .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #334155, #1e293b);
+        background: linear-gradient(135deg, #16a34a, #15803d);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
+        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
       }
       .bgs-theme-nature .bgs-checklist-card {
         background: #f0fdf4;
-        border: 2px solid #86efac;
+        border: 2.5px solid #22c55e;
+        box-shadow: 0 4px 16px rgba(34, 197, 94, 0.15);
       }
       .bgs-theme-nature .bgs-checklist-title { color: #15803d; }
       .bgs-theme-nature .bgs-checklist-item {
         background: #ffffff;
-        border: 1px solid #bbf7d0;
+        border: 1.5px solid #bbf7d0;
       }
       .bgs-theme-nature .bgs-checklist-item strong { color: #15803d; }
-      .bgs-theme-nature .bgs-checklist-item p { color: #14532d; }
+      .bgs-theme-nature .bgs-checklist-item p { color: #374151; }
       .bgs-theme-nature .bgs-hardware-notice {
-        background: #fff7ed;
-        border: 1.5px dashed #ea580c;
-        color: #9a3412;
+        background: #fef9c3;
+        border: 1.5px dashed #ca8a04;
+        color: #854d0e;
       }
 
       /* ==========================================================================
-         🎨 4. FANTASY 主題 (中古羊皮紙白 · 明亮高對比版)
+         🎨 2. PIXEL 主題 (活力明亮金黃街機風) 🍄 (告別沉重黑底配紅字)
          ========================================================================== */
-      .bgs-theme-fantasy {
-        background: #fefcf6;
-        border: 2.5px solid #b45309;
-        border-radius: 20px;
-        box-shadow: 0 20px 45px -10px rgba(180, 83, 9, 0.22), 0 0 0 1px rgba(180, 83, 9, 0.1);
+      .bgs-overlay:has(.bgs-theme-pixel) {
+        background: rgba(254, 243, 199, 0.85);
       }
-      .bgs-theme-fantasy .bgs-title {
-        color: #78350f;
-        text-shadow: none;
-        font-family: Georgia, "Microsoft JhengHei", serif;
-        font-weight: 900;
-      }
-      .bgs-theme-fantasy .bgs-subtitle { color: #64748b; font-weight: 600; }
-      .bgs-theme-fantasy .bgs-label { color: #451a03; font-weight: 700; }
-      .bgs-theme-fantasy .bgs-input, .bgs-theme-fantasy .bgs-select {
+      .bgs-theme-pixel {
         background: #ffffff;
-        border: 1.5px solid #d4d4d8;
+        border: 4px solid #f59e0b;
+        border-radius: 18px;
+        box-shadow: 0 25px 60px rgba(245, 158, 11, 0.25), 0 4px 16px rgba(0,0,0,0.06);
         color: #451a03;
-        font-weight: 600;
       }
-      .bgs-theme-fantasy .bgs-input:focus, .bgs-theme-fantasy .bgs-select:focus {
-        border-color: #b45309;
-        box-shadow: 0 0 10px rgba(180, 83, 9, 0.28);
+      .bgs-theme-pixel .bgs-title {
+        color: #dc2626;
+        text-shadow: 1px 1px 0 #fbbf24;
+        letter-spacing: 0.5px;
       }
-      .bgs-theme-fantasy .bgs-theme-tag {
-        background: #fef3c7;
-        border: 1.5px solid #b45309;
-        color: #78350f;
-        font-weight: 800;
-      }
-      .bgs-theme-fantasy .bgs-unit-badge {
+      .bgs-theme-pixel .bgs-subtitle { color: #b45309; }
+      .bgs-theme-pixel .bgs-label { color: #78350f; }
+      .bgs-theme-pixel .bgs-input, .bgs-theme-pixel .bgs-select {
         background: #fffbeb;
-        border: 1.5px solid #b45309;
-        color: #78350f;
-        font-weight: 800;
+        border: 2px solid #f59e0b;
+        border-radius: 10px;
+        color: #451a03;
       }
-      .bgs-theme-fantasy .bgs-contract-box {
-        background: #fffbeb;
-        border: 1.5px dashed #b45309;
-      }
-      .bgs-theme-fantasy .bgs-contract-title { color: #78350f; font-weight: 800; }
-      .bgs-theme-fantasy .bgs-contract-item { color: #451a03; }
-      .bgs-theme-fantasy .bgs-btn-primary {
-        background: linear-gradient(135deg, #b45309, #78350f);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(180, 83, 9, 0.32);
-      }
-      .bgs-theme-fantasy .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #78350f, #451a03);
-      }
-      .bgs-theme-fantasy .bgs-badge-success {
-        background: #fefce8;
-        border: 2px solid #b45309;
-        color: #78350f;
-      }
-      .bgs-theme-fantasy .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #d97706, #92400e);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
-      }
-      .bgs-theme-fantasy .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #334155, #1e293b);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
-      }
-      .bgs-theme-fantasy .bgs-checklist-card {
-        background: #fffbeb;
-        border: 2px solid #d97706;
-      }
-      .bgs-theme-fantasy .bgs-checklist-title { color: #78350f; }
-      .bgs-theme-fantasy .bgs-checklist-item {
+      .bgs-theme-pixel .bgs-input::placeholder { color: #d97706; }
+      .bgs-theme-pixel .bgs-input:focus, .bgs-theme-pixel .bgs-select:focus {
+        border-color: #d97706;
         background: #ffffff;
-        border: 1px solid #fde68a;
+        box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.35);
       }
-      .bgs-theme-fantasy .bgs-checklist-item strong { color: #78350f; }
-      .bgs-theme-fantasy .bgs-checklist-item p { color: #451a03; }
-      .bgs-theme-fantasy .bgs-hardware-notice {
-        background: #fff7ed;
-        border: 1.5px dashed #ea580c;
-        color: #9a3412;
+      .bgs-theme-pixel .bgs-theme-tag {
+        background: #fef3c7;
+        border: 2px solid #f59e0b;
+        color: #b45309;
       }
-
-      /* ==========================================================================
-         🎨 5. WARM 主題 (暖日和風工坊 · 明亮高對比版)
-         ========================================================================== */
-      .bgs-theme-warm {
-        background: #faf7f2;
-        border: 2.5px solid #ea580c;
-        border-radius: 22px;
-        box-shadow: 0 20px 45px -10px rgba(234, 88, 12, 0.2), 0 0 0 1px rgba(234, 88, 12, 0.08);
+      .bgs-theme-pixel .bgs-unit-badge {
+        background: #fffbeb;
+        border: 2px solid #f59e0b;
+        color: #92400e;
       }
-      .bgs-theme-warm .bgs-title {
-        color: #9a3412;
-        text-shadow: none;
-        font-weight: 900;
+      .bgs-theme-pixel .bgs-contract-box {
+        background: #fee2e2;
+        border: 2px dashed #ef4444;
+        border-radius: 12px;
       }
-      .bgs-theme-warm .bgs-subtitle { color: #64748b; font-weight: 600; }
-      .bgs-theme-warm .bgs-label { color: #431407; font-weight: 700; }
-      .bgs-theme-warm .bgs-input, .bgs-theme-warm .bgs-select {
+      .bgs-theme-pixel .bgs-contract-title { color: #dc2626; }
+      .bgs-theme-pixel .bgs-contract-item { color: #991b1b; }
+      .bgs-theme-pixel .bgs-btn-primary {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border: 2px solid #fca5a5;
+        border-radius: 12px;
+        color: #ffffff;
+        box-shadow: 0 6px 20px rgba(220, 38, 38, 0.35);
+        text-shadow: 1px 1px 0 #991b1b;
+      }
+      .bgs-theme-pixel .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+      }
+      .bgs-theme-pixel .bgs-badge-success {
+        background: #fffbeb;
+        border: 3px solid #f59e0b;
+        color: #b45309;
+        box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
+      }
+      .bgs-theme-pixel .bgs-btn-stage2-extra {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        border: 2px solid #fde68a;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+      }
+      .bgs-theme-pixel .bgs-btn-stage2-return {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border: 2px solid #fca5a5;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);
+      }
+      .bgs-theme-pixel .bgs-checklist-card {
+        background: #fffbeb;
+        border: 3px solid #f59e0b;
+        border-radius: 16px;
+      }
+      .bgs-theme-pixel .bgs-checklist-title { color: #b45309; }
+      .bgs-theme-pixel .bgs-checklist-item {
         background: #ffffff;
         border: 1.5px solid #fed7aa;
-        color: #431407;
-        font-weight: 600;
       }
+      .bgs-theme-pixel .bgs-checklist-item strong { color: #dc2626; }
+      .bgs-theme-pixel .bgs-checklist-item p { color: #451a03; }
+      .bgs-theme-pixel .bgs-hardware-notice {
+        background: #fee2e2;
+        border: 1.5px dashed #f87171;
+        color: #991b1b;
+      }
+
+      /* ==========================================================================
+         🎨 3. WARM 主題 (日系明亮暖木工坊風) 🍱
+         ========================================================================== */
+      .bgs-overlay:has(.bgs-theme-warm) {
+        background: rgba(255, 247, 237, 0.88);
+      }
+      .bgs-theme-warm {
+        background: #ffffff;
+        border: 3px solid #ea580c;
+        border-radius: 24px;
+        box-shadow: 0 25px 60px rgba(234, 88, 12, 0.2), 0 4px 16px rgba(0,0,0,0.06);
+        color: #431407;
+      }
+      .bgs-theme-warm .bgs-title { color: #ea580c; text-shadow: none; }
+      .bgs-theme-warm .bgs-subtitle { color: #c2410c; }
+      .bgs-theme-warm .bgs-label { color: #7c2d12; }
+      .bgs-theme-warm .bgs-input, .bgs-theme-warm .bgs-select {
+        background: #fff7ed;
+        border: 2px solid #fdba74;
+        color: #431407;
+      }
+      .bgs-theme-warm .bgs-input::placeholder { color: #fdba74; }
       .bgs-theme-warm .bgs-input:focus, .bgs-theme-warm .bgs-select:focus {
         border-color: #ea580c;
-        box-shadow: 0 0 10px rgba(234, 88, 12, 0.28);
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.25);
       }
       .bgs-theme-warm .bgs-theme-tag {
         background: #ffedd5;
         border: 1.5px solid #ea580c;
         color: #c2410c;
-        font-weight: 800;
       }
       .bgs-theme-warm .bgs-unit-badge {
         background: #fff7ed;
-        border: 1.5px solid #ea580c;
-        color: #c2410c;
-        font-weight: 800;
-      }
-      .bgs-theme-warm .bgs-contract-box {
-        background: #fff7ed;
-        border: 1.5px dashed #ea580c;
-      }
-      .bgs-theme-warm .bgs-contract-title { color: #c2410c; font-weight: 800; }
-      .bgs-theme-warm .bgs-contract-item { color: #7c2d12; }
-      .bgs-theme-warm .bgs-btn-primary {
-        background: linear-gradient(135deg, #ea580c, #c2410c);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(234, 88, 12, 0.32);
-      }
-      .bgs-theme-warm .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #c2410c, #9a3412);
-      }
-      .bgs-theme-warm .bgs-badge-success {
-        background: #fefce8;
         border: 2px solid #ea580c;
         color: #9a3412;
       }
-      .bgs-theme-warm .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #d97706, #b45309);
+      .bgs-theme-warm .bgs-contract-box {
+        background: #ffedd5;
+        border: 2px dashed #f97316;
+      }
+      .bgs-theme-warm .bgs-contract-title { color: #c2410c; }
+      .bgs-theme-warm .bgs-contract-item { color: #9a3412; }
+      .bgs-theme-warm .bgs-btn-primary {
+        background: linear-gradient(135deg, #f97316, #ea580c);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+        box-shadow: 0 6px 20px rgba(234, 88, 12, 0.35);
+      }
+      .bgs-theme-warm .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #ea580c, #c2410c);
+      }
+      .bgs-theme-warm .bgs-badge-success {
+        background: #fff7ed;
+        border: 2.5px solid #ea580c;
+        color: #c2410c;
+        box-shadow: 0 4px 16px rgba(234, 88, 12, 0.2);
+      }
+      .bgs-theme-warm .bgs-btn-stage2-extra {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
       }
       .bgs-theme-warm .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #334155, #1e293b);
+        background: linear-gradient(135deg, #ea580c, #c2410c);
         color: #ffffff;
-        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
+        box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
       }
       .bgs-theme-warm .bgs-checklist-card {
         background: #fff7ed;
-        border: 2px solid #fed7aa;
+        border: 2.5px solid #ea580c;
+        box-shadow: 0 4px 16px rgba(234, 88, 12, 0.15);
       }
       .bgs-theme-warm .bgs-checklist-title { color: #9a3412; }
       .bgs-theme-warm .bgs-checklist-item {
         background: #ffffff;
-        border: 1px solid #fed7aa;
+        border: 1.5px solid #fed7aa;
       }
-      .bgs-theme-warm .bgs-checklist-item strong { color: #9a3412; }
-      .bgs-theme-warm .bgs-checklist-item p { color: #7c2d12; }
+      .bgs-theme-warm .bgs-checklist-item strong { color: #c2410c; }
+      .bgs-theme-warm .bgs-checklist-item p { color: #431407; }
       .bgs-theme-warm .bgs-hardware-notice {
-        background: #fff7ed;
-        border: 1.5px dashed #ea580c;
-        color: #9a3412;
+        background: #fef9c3;
+        border: 1.5px dashed #ca8a04;
+        color: #854d0e;
+      }
+
+      /* ==========================================================================
+         🎨 4. FANTASY 主題 (典雅明亮古羊皮紙公會) ⚔️
+         ========================================================================== */
+      .bgs-overlay:has(.bgs-theme-fantasy) {
+        background: rgba(254, 252, 232, 0.88);
+      }
+      .bgs-theme-fantasy {
+        background: #ffffff;
+        border: 3px solid #d97706;
+        border-radius: 22px;
+        box-shadow: 0 25px 60px rgba(217, 119, 6, 0.22), 0 4px 16px rgba(0,0,0,0.06);
+        color: #451a03;
+      }
+      .bgs-theme-fantasy .bgs-title { color: #b45309; text-shadow: none; }
+      .bgs-theme-fantasy .bgs-subtitle { color: #92400e; }
+      .bgs-theme-fantasy .bgs-label { color: #78350f; }
+      .bgs-theme-fantasy .bgs-input, .bgs-theme-fantasy .bgs-select {
+        background: #fefce8;
+        border: 2px solid #fde047;
+        color: #451a03;
+      }
+      .bgs-theme-fantasy .bgs-input::placeholder { color: #ca8a04; }
+      .bgs-theme-fantasy .bgs-input:focus, .bgs-theme-fantasy .bgs-select:focus {
+        border-color: #d97706;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.25);
+      }
+      .bgs-theme-fantasy .bgs-theme-tag {
+        background: #fef9c3;
+        border: 1.5px solid #d97706;
+        color: #78350f;
+      }
+      .bgs-theme-fantasy .bgs-unit-badge {
+        background: #fefce8;
+        border: 2px solid #d97706;
+        color: #78350f;
+      }
+      .bgs-theme-fantasy .bgs-contract-box {
+        background: #fef3c7;
+        border: 2px dashed #b45309;
+      }
+      .bgs-theme-fantasy .bgs-contract-title { color: #78350f; }
+      .bgs-theme-fantasy .bgs-contract-item { color: #451a03; }
+      .bgs-theme-fantasy .bgs-btn-primary {
+        background: linear-gradient(135deg, #d97706, #b45309);
+        color: #ffffff;
+        box-shadow: 0 6px 20px rgba(180, 83, 9, 0.35);
+      }
+      .bgs-theme-fantasy .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #b45309, #78350f);
+      }
+      .bgs-theme-fantasy .bgs-badge-success {
+        background: #fefce8;
+        border: 2.5px solid #d97706;
+        color: #78350f;
+        box-shadow: 0 4px 16px rgba(217, 119, 6, 0.2);
+      }
+      .bgs-theme-fantasy .bgs-btn-stage2-extra {
+        background: linear-gradient(135deg, #d97706, #b45309);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+      }
+      .bgs-theme-fantasy .bgs-btn-stage2-return {
+        background: linear-gradient(135deg, #78350f, #451a03);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(120, 53, 15, 0.35);
+      }
+      .bgs-theme-fantasy .bgs-checklist-card {
+        background: #fefce8;
+        border: 2.5px solid #d97706;
+        box-shadow: 0 4px 16px rgba(217, 119, 6, 0.15);
+      }
+      .bgs-theme-fantasy .bgs-checklist-title { color: #78350f; }
+      .bgs-theme-fantasy .bgs-checklist-item {
+        background: #ffffff;
+        border: 1.5px solid #fef08a;
+      }
+      .bgs-theme-fantasy .bgs-checklist-item strong { color: #92400e; }
+      .bgs-theme-fantasy .bgs-checklist-item p { color: #451a03; }
+      .bgs-theme-fantasy .bgs-hardware-notice {
+        background: #fef9c3;
+        border: 1.5px dashed #d97706;
+        color: #78350f;
+      }
+
+      /* ==========================================================================
+         🎨 5. SCIFI 主題 (唯一保留之深空星艦科技風) 🚀
+         ========================================================================== */
+      .bgs-overlay:has(.bgs-theme-scifi) {
+        background: rgba(15, 23, 42, 0.92);
+      }
+      .bgs-theme-scifi {
+        background: #0f172a;
+        border: 2px solid #38bdf8;
+        border-radius: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.3);
+        color: #f8fafc;
+      }
+      .bgs-theme-scifi .bgs-title { color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
+      .bgs-theme-scifi .bgs-subtitle { color: #94a3b8; }
+      .bgs-theme-scifi .bgs-label { color: #cbd5e1; }
+      .bgs-theme-scifi .bgs-input, .bgs-theme-scifi .bgs-select {
+        background: #1e293b;
+        border: 1.5px solid #334155;
+        color: #f8fafc;
+      }
+      .bgs-theme-scifi .bgs-input:focus, .bgs-theme-scifi .bgs-select:focus {
+        border-color: #38bdf8;
+        box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
+      }
+      .bgs-theme-scifi .bgs-theme-tag {
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid #38bdf8;
+        color: #7dd3fc;
+      }
+      .bgs-theme-scifi .bgs-unit-badge {
+        background: rgba(56, 189, 248, 0.12);
+        border: 1.5px solid #38bdf8;
+        color: #7dd3fc;
+      }
+      .bgs-theme-scifi .bgs-contract-box {
+        background: rgba(239, 68, 68, 0.12);
+        border: 1.5px dashed #ef4444;
+      }
+      .bgs-theme-scifi .bgs-contract-title { color: #fca5a5; }
+      .bgs-theme-scifi .bgs-contract-item { color: #fecaca; }
+      .bgs-theme-scifi .bgs-btn-primary {
+        background: linear-gradient(135deg, #0284c7, #0369a1);
+        border: 1.5px solid #7dd3fc;
+        color: white;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+      }
+      .bgs-theme-scifi .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #38bdf8, #0284c7);
+      }
+      .bgs-theme-scifi .bgs-badge-success {
+        background: rgba(56, 189, 248, 0.15);
+        border: 2px solid #38bdf8;
+        color: #7dd3fc;
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+      }
+      .bgs-theme-scifi .bgs-btn-stage2-extra {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        border: 1.5px solid #fde68a;
+        color: white;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+      }
+      .bgs-theme-scifi .bgs-btn-stage2-return {
+        background: linear-gradient(135deg, #0284c7, #0369a1);
+        border: 1.5px solid #7dd3fc;
+        color: white;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+      }
+      .bgs-theme-scifi .bgs-checklist-card {
+        background: #0f172a;
+        border: 2px solid #38bdf8;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+      }
+      .bgs-theme-scifi .bgs-checklist-title { color: #38bdf8; }
+      .bgs-theme-scifi .bgs-checklist-item {
+        background: #1e293b;
+        border: 1px solid #334155;
+      }
+      .bgs-theme-scifi .bgs-checklist-item strong { color: #7dd3fc; }
+      .bgs-theme-scifi .bgs-checklist-item p { color: #cbd5e1; }
+      .bgs-theme-scifi .bgs-hardware-notice {
+        background: rgba(245, 158, 11, 0.15);
+        border: 1.5px dashed #f59e0b;
+        color: #fde68a;
       }
     `;
     document.head.appendChild(style);
@@ -1480,82 +1497,87 @@
   }
 
   // 🚀 自動守門員：在 DOMContentLoaded 時自動檢查是否需要登入
-  window.addEventListener('DOMContentLoaded', () => {
+    function triggerAutoLogin() {
     initExitGuard();
 
-    // 珍奶對決等教具若標記 __DISABLE_BGS_AUTO_LOGIN__ 則不自動彈出
     if (window.__DISABLE_BGS_AUTO_LOGIN__) return;
 
-    // 稍微延遲 120ms 確保頁面原有元素與變數已載入
-    setTimeout(() => {
-      // 檢查是否已在同一 session 驗證過
-      const authedRaw = sessionStorage.getItem('bgs_authed_student');
-      if (authedRaw) {
-        try {
-          const authed = JSON.parse(authedRaw);
-          if (authed && authed.name && authed.class && authed.seat) {
-            currentStudent = authed;
-            isGameActive = true;
-            syncStudentToDom(authed);
-            return;
-          }
-        } catch (_) {}
-      }
-
-      // 取得遊戲標題
-      const rawTitle = document.querySelector('h1')?.innerText || document.title || '課堂生物挑戰';
-      const cleanTitle = rawTitle.replace(/[【】\[\]]/g, '').split('|')[0].split('-')[0].trim();
-
-      // 判定是否為大廳二獨立遊戲 (隱藏單元)
-      const isStandalone = location.href.includes('bio-standalone-games') || 
-                           location.href.includes('bio-digestive-game') ||
-                           location.href.includes('bio-five-kingdoms-game') ||
-                           location.href.includes('人體消化') || 
-                           location.href.includes('五界');
-
-      showLogin({
-        gameTitle: cleanTitle,
-        hideUnit: false, // 獨立遊戲套用 Option B 鎖定專屬徽章
-        onStart: (student) => {
-          syncStudentToDom(student);
+    // 檢查是否已在同一 session 驗證過
+    const authedRaw = sessionStorage.getItem('bgs_authed_student');
+    if (authedRaw) {
+      try {
+        const authed = JSON.parse(authedRaw);
+        if (authed && authed.name && authed.class && authed.seat) {
+          currentStudent = authed;
           isGameActive = true;
+          syncStudentToDom(authed);
+          return;
+        }
+      } catch (_) {}
+    }
 
-          // 隱藏各遊戲原本重複的登入介面
-          const redundantEls = [
-            document.getElementById('start-modal'),
-            document.getElementById('setupCard'),
-            document.getElementById('setup-screen')
-          ];
-          redundantEls.forEach(el => {
-            if (el) el.style.display = 'none';
-          });
+    // 取得遊戲標題
+    const rawTitle = document.querySelector('h1')?.innerText || document.title || '課堂生物挑戰';
+    const cleanTitle = rawTitle.replace(/[【】\[\]]/g, '').split('|')[0].split('-')[0].trim();
 
-          // 自動觸發遊戲既有的開始函式或按鈕
-          if (typeof window.startGame === 'function') {
-            try { window.startGame(); return; } catch (_) {}
-          }
-          if (typeof window.startMission === 'function') {
-            try { window.startMission(); return; } catch (_) {}
-          }
+    // 判定是否為大廳二獨立遊戲
+    const isStandalone = location.href.includes('bio-standalone-games') || 
+                         location.href.includes('bio-digestive-game') ||
+                         location.href.includes('bio-five-kingdoms-game') ||
+                         location.href.includes('人體消化') || 
+                         location.href.includes('五界');
 
-          const possibleStartButtons = [
-            document.getElementById('startBtn'),
-            document.getElementById('start-btn'),
-            document.getElementById('btnStart'),
-            document.getElementById('btnStartGame'),
-            document.getElementById('startGameBtn'),
-            document.getElementById('enter-lab'),
-            document.getElementById('start')
-          ];
-          for (const btn of possibleStartButtons) {
-            if (btn && btn.offsetParent !== null && typeof btn.click === 'function') {
-              try { btn.click(); break; } catch (_) {}
-            }
+    // 零延遲立即彈出，徹底杜絕舊版元素閃現
+    showLogin({
+      gameTitle: cleanTitle,
+      hideUnit: false,
+      onStart: (student) => {
+        syncStudentToDom(student);
+        isGameActive = true;
+
+        // 徹底壓制各遊戲原本舊有的登入介面
+        const redundantEls = [
+          document.getElementById('start-modal'),
+          document.getElementById('setupCard'),
+          document.getElementById('setup-screen'),
+          document.getElementById('startScreen'),
+          document.getElementById('intro')
+        ];
+        redundantEls.forEach(el => {
+          if (el) el.style.display = 'none';
+        });
+
+        // 自動觸發遊戲既有的開始函式或按鈕
+        if (typeof window.startGame === 'function') {
+          try { window.startGame(); return; } catch (_) {}
+        }
+        if (typeof window.startMission === 'function') {
+          try { window.startMission(); return; } catch (_) {}
+        }
+
+        const possibleStartButtons = [
+          document.getElementById('startBtn'),
+          document.getElementById('start-btn'),
+          document.getElementById('btnStart'),
+          document.getElementById('btnStartGame'),
+          document.getElementById('startGameBtn'),
+          document.getElementById('enter-lab'),
+          document.getElementById('start')
+        ];
+        for (const btn of possibleStartButtons) {
+          if (btn && btn.offsetParent !== null && typeof btn.click === 'function') {
+            try { btn.click(); break; } catch (_) {}
           }
         }
-      });
-    }, 120);
-  });
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', triggerAutoLogin);
+  } else {
+    triggerAutoLogin();
+  }
 
   global.BioGameSuite = {
     showLogin: showLogin,
