@@ -1,6 +1,6 @@
 /**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
- * 版本: v3.9 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
+ * 版本: v4.0 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
  * 
  * 🎨 五大情境主題（外觀自動隨遊戲調配，底層標準 100% 嚴格統一）：
  * 1. 🕹️ 復古像素街機風 (Pixel) - 瑪利歐 (mario)、小精靈 (pacman)、下樓梯 (shaft)
@@ -35,6 +35,22 @@
   let isGameActive = false;
   let isScoreSubmitted = false;
   let exitGuardEnabled = false;
+
+  // ⚡ 0ms 立即壓制任何既有舊版開局卡片（徹底杜絕畫面閃爍與干擾）
+  try {
+    const antiFlash = document.createElement('style');
+    antiFlash.id = 'bgsAntiFlash';
+    antiFlash.textContent = '#setup-screen, #start-modal, #setupCard, .legacy-setup { display: none !important; }';
+    if (document.head) {
+      document.head.appendChild(antiFlash);
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        if (!document.getElementById('bgsAntiFlash') && document.head) {
+          document.head.appendChild(antiFlash);
+        }
+      });
+    }
+  } catch (_) {}
 
   // 🎨 五大情境主題設定檔
   const THEME_CONFIGS = {
