@@ -1,6 +1,6 @@
 /**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
- * 版本: v4.1 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
+ * 版本: v4.2 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
  * 
  * 🎨 五大情境主題（外觀自動隨遊戲調配，底層標準 100% 嚴格統一）：
  * 1. 🕹️ 復古像素街機風 (Pixel) - 瑪利歐 (mario)、小精靈 (pacman)、下樓梯 (shaft)
@@ -108,16 +108,16 @@
     },
     scifi: {
       id: 'scifi',
-      name: '深空星艦科技風 (深藍)',
+      name: '清透冰川科技風 (明亮)',
       icon: '🚀',
       subtitle: '星艦生物資料庫 · 請輸入身分登入',
       confirmSubtitle: '防滑錯確認 · 避免成績登記至其他同學座號',
       settleTitle: '🏆 挑戰圓滿結算！',
       loginBtnText: '下一步：核對身分與公約 ➜',
       startBtnText: '🚀 我已核對身分並遵守公約，開始出擊！',
-      accentColor: '#38bdf8',
-      cardBorder: '#38bdf8',
-      badgeBg: 'rgba(56, 189, 248, 0.15)'
+      accentColor: '#0284c7',
+      cardBorder: '#0284c7',
+      badgeBg: '#e0f2fe'
     }
   };
 
@@ -175,6 +175,7 @@
          BGS BASE RESET & OVERLAY
          ========================================================================== */
       .bgs-overlay {
+        background: rgba(248, 250, 252, 0.88);
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
         backdrop-filter: blur(14px);
@@ -353,6 +354,12 @@
       /* ==========================================================================
          🎨 1. NATURE 主題 (清新明亮森林白) 🌿
          ========================================================================== */
+      
+      .bgs-overlay-nature { background: rgba(236, 253, 245, 0.88) !important; }
+      .bgs-overlay-pixel { background: rgba(254, 243, 199, 0.88) !important; }
+      .bgs-overlay-warm { background: rgba(255, 247, 237, 0.88) !important; }
+      .bgs-overlay-fantasy { background: rgba(254, 252, 232, 0.88) !important; }
+      .bgs-overlay-scifi { background: rgba(15, 23, 42, 0.92) !important; }
       .bgs-overlay:has(.bgs-theme-nature) {
         background: rgba(236, 253, 245, 0.85);
       }
@@ -702,89 +709,91 @@
       }
 
       /* ==========================================================================
-         🎨 5. SCIFI 主題 (唯一保留之深空星艦科技風) 🚀
+         🎨 5. SCIFI 主題 (清透冰川科技白 · 明亮高對比版) 🚀
          ========================================================================== */
       .bgs-overlay:has(.bgs-theme-scifi) {
-        background: rgba(15, 23, 42, 0.92);
+        background: rgba(15, 23, 42, 0.72);
       }
       .bgs-theme-scifi {
-        background: #0f172a;
-        border: 2px solid #38bdf8;
+        background: #ffffff;
+        border: 2.5px solid #0284c7;
         border-radius: 24px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(56, 189, 248, 0.3);
-        color: #f8fafc;
+        box-shadow: 0 20px 45px -10px rgba(2, 132, 199, 0.22), 0 0 0 1px rgba(2, 132, 199, 0.08);
+        color: #0f172a;
       }
-      .bgs-theme-scifi .bgs-title { color: #38bdf8; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5); }
-      .bgs-theme-scifi .bgs-subtitle { color: #94a3b8; }
-      .bgs-theme-scifi .bgs-label { color: #cbd5e1; }
+      .bgs-theme-scifi .bgs-title { color: #0369a1; text-shadow: none; font-weight: 900; }
+      .bgs-theme-scifi .bgs-subtitle { color: #64748b; font-weight: 600; }
+      .bgs-theme-scifi .bgs-label { color: #0f172a; font-weight: 700; }
       .bgs-theme-scifi .bgs-input, .bgs-theme-scifi .bgs-select {
-        background: #1e293b;
-        border: 1.5px solid #334155;
-        color: #f8fafc;
+        background: #f8fafc;
+        border: 1.5px solid #cbd5e1;
+        color: #0f172a;
+        font-weight: 600;
       }
       .bgs-theme-scifi .bgs-input:focus, .bgs-theme-scifi .bgs-select:focus {
-        border-color: #38bdf8;
-        box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
+        border-color: #0284c7;
+        background: #ffffff;
+        box-shadow: 0 0 10px rgba(2, 132, 199, 0.3);
       }
       .bgs-theme-scifi .bgs-theme-tag {
-        background: rgba(56, 189, 248, 0.15);
-        border: 1px solid #38bdf8;
-        color: #7dd3fc;
+        background: #e0f2fe;
+        border: 1px solid #0284c7;
+        color: #0369a1;
+        font-weight: 800;
       }
       .bgs-theme-scifi .bgs-unit-badge {
-        background: rgba(56, 189, 248, 0.12);
-        border: 1.5px solid #38bdf8;
-        color: #7dd3fc;
+        background: #f0f9ff;
+        border: 1.5px solid #0284c7;
+        color: #0369a1;
+        font-weight: 800;
       }
       .bgs-theme-scifi .bgs-contract-box {
-        background: rgba(239, 68, 68, 0.12);
+        background: #fef2f2;
         border: 1.5px dashed #ef4444;
       }
-      .bgs-theme-scifi .bgs-contract-title { color: #fca5a5; }
-      .bgs-theme-scifi .bgs-contract-item { color: #fecaca; }
+      .bgs-theme-scifi .bgs-contract-title { color: #b91c1c; font-weight: 800; }
+      .bgs-theme-scifi .bgs-contract-item { color: #991b1b; }
       .bgs-theme-scifi .bgs-btn-primary {
         background: linear-gradient(135deg, #0284c7, #0369a1);
-        border: 1.5px solid #7dd3fc;
+        border: none;
         color: white;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.32);
       }
       .bgs-theme-scifi .bgs-btn-primary:hover {
-        background: linear-gradient(135deg, #38bdf8, #0284c7);
+        background: linear-gradient(135deg, #0369a1, #075985);
       }
       .bgs-theme-scifi .bgs-badge-success {
-        background: rgba(56, 189, 248, 0.15);
-        border: 2px solid #38bdf8;
-        color: #7dd3fc;
-        box-shadow: 0 0 15px rgba(56, 189, 248, 0.25);
+        background: #f0fdf4;
+        border: 2px solid #0284c7;
+        color: #0369a1;
       }
       .bgs-theme-scifi .bgs-btn-stage2-extra {
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        border: 1.5px solid #fde68a;
+        background: linear-gradient(135deg, #0d9488, #0f766e);
+        border: none;
         color: white;
-        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+        box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
       }
       .bgs-theme-scifi .bgs-btn-stage2-return {
-        background: linear-gradient(135deg, #0284c7, #0369a1);
-        border: 1.5px solid #7dd3fc;
+        background: linear-gradient(135deg, #334155, #1e293b);
+        border: none;
         color: white;
-        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+        box-shadow: 0 4px 14px rgba(51, 65, 85, 0.3);
       }
       .bgs-theme-scifi .bgs-checklist-card {
-        background: #0f172a;
-        border: 2px solid #38bdf8;
-        box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        background: #f0f9ff;
+        border: 2px solid #bae6fd;
       }
-      .bgs-theme-scifi .bgs-checklist-title { color: #38bdf8; }
+      .bgs-theme-scifi .bgs-checklist-title { color: #0369a1; }
       .bgs-theme-scifi .bgs-checklist-item {
-        background: #1e293b;
-        border: 1px solid #334155;
+        background: #ffffff;
+        border: 1px solid #bae6fd;
       }
-      .bgs-theme-scifi .bgs-checklist-item strong { color: #7dd3fc; }
-      .bgs-theme-scifi .bgs-checklist-item p { color: #cbd5e1; }
+      .bgs-theme-scifi .bgs-checklist-item strong { color: #0369a1; }
+      .bgs-theme-scifi .bgs-checklist-item p { color: #0f172a; }
       .bgs-theme-scifi .bgs-hardware-notice {
-        background: rgba(245, 158, 11, 0.15);
-        border: 1.5px dashed #f59e0b;
-        color: #fde68a;
+        background: #fff7ed;
+        border: 1.5px dashed #ea580c;
+        color: #9a3412;
       }
     `;
     document.head.appendChild(style);
@@ -983,7 +992,7 @@
     if (existing) existing.remove();
 
     const overlay = document.createElement('div');
-    overlay.className = 'bgs-overlay';
+    overlay.className = 'bgs-overlay bgs-overlay-' + theme.id;
     overlay.id = 'bgsLoginOverlay';
 
     const savedClass = localStorage.getItem('bgs_last_class') || '701';
@@ -1104,7 +1113,7 @@
   function showConfirmModal(options) {
     const theme = resolveTheme(options);
     const overlay = document.createElement('div');
-    overlay.className = 'bgs-overlay';
+    overlay.className = 'bgs-overlay bgs-overlay-' + theme.id;
     overlay.id = 'bgsConfirmOverlay';
 
     overlay.innerHTML = `
@@ -1197,7 +1206,7 @@
   function promptIdentityBeforeResult(options) {
     const theme = resolveTheme(options);
     const overlay = document.createElement('div');
-    overlay.className = 'bgs-overlay';
+    overlay.className = 'bgs-overlay bgs-overlay-' + theme.id;
     overlay.id = 'bgsPromptIdOverlay';
 
     const classOpts = Array.from({ length: 10 }, (_, i) => {
@@ -1272,7 +1281,7 @@
   function renderThreeStageResult(options) {
     const theme = resolveTheme(options);
     const overlay = document.createElement('div');
-    overlay.className = 'bgs-overlay';
+    overlay.className = 'bgs-overlay bgs-overlay-' + theme.id;
     overlay.id = 'bgsResultOverlay';
 
     const score = options.score !== undefined ? options.score : 100;
