@@ -925,26 +925,27 @@
     const urlUnit = params.get('unit') || params.get('file');
     const isDispatch = !!urlUnit;
 
+    const hrefStr = (typeof location !== 'undefined' && location.href) ? location.href.toLowerCase() : '';
+    const pathStr = (typeof location !== 'undefined' && location.pathname) ? location.pathname.toLowerCase() : '';
+    const docTitle = (typeof document !== 'undefined' && document.title) ? document.title.toLowerCase() : '';
+    const gTitle = (options && options.gameTitle ? options.gameTitle : '').toLowerCase();
+
     // 大廳二或獨立專案嚴格檢測 (含本機與 GitHub Pages 網址)
     const isStandalone = !!(options.isStandalone || options.fixedUnit ||
-      location.href.includes('bio-standalone-games') ||
-      location.href.includes('bio-digestive-game') ||
-      location.href.includes('bio-five-kingdoms-game') ||
-      location.href.includes('boba-reaction-game') ||
-      location.pathname.includes('digestive') ||
-      location.pathname.includes('five-kingdoms') ||
-      location.pathname.includes('boba') ||
-      document.title.includes('消化') ||
-      document.title.includes('五界') ||
-      document.title.includes('珍奶') ||
-      (options.gameTitle && (options.gameTitle.includes('消化') || options.gameTitle.includes('五界') || options.gameTitle.includes('珍奶'))));
+      hrefStr.includes('bio-standalone-games') ||
+      hrefStr.includes('bio-digestive-game') ||
+      hrefStr.includes('bio-five-kingdoms-game') ||
+      hrefStr.includes('boba-reaction-game') ||
+      pathStr.includes('digestive') ||
+      pathStr.includes('five-kingdoms') ||
+      pathStr.includes('boba') ||
+      docTitle.includes('消化') ||
+      docTitle.includes('五界') ||
+      docTitle.includes('珍奶') ||
+      gTitle.includes('消化') || gTitle.includes('五界') || gTitle.includes('珍奶'));
 
     let standaloneUnitName = options.unitTitle || '';
     if (isStandalone && !standaloneUnitName) {
-      const gTitle = (options.gameTitle || '').toLowerCase();
-      const docTitle = (document.title || '').toLowerCase();
-      const hrefStr = (location.href || '').toLowerCase();
-
       if (docTitle.includes('消化') || hrefStr.includes('digestive') || gTitle.includes('消化')) {
         standaloneUnitName = '專屬任務：人體消化系統冒險';
       } else if (docTitle.includes('五界') || hrefStr.includes('five-kingdoms') || hrefStr.includes('kingdom') || gTitle.includes('五界')) {
