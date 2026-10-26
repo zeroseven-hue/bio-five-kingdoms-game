@@ -1,16 +1,21 @@
 /**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
- * 版本: v3.6 (全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
+ * 版本: v3.7 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
+ * 
+ * 🎨 五大情境主題（外觀自動隨遊戲調配，底層標準 100% 嚴格統一）：
+ * 1. 🕹️ 復古像素街機風 (Pixel) - 瑪利歐 (mario)、小精靈 (pacman)、下樓梯 (shaft)
+ * 2. 🌿 森林萌系大地風 (Nature) - 淘氣豆 (bean)、羊羊農場 (escape-farm)、釣魚趣 (fishing)、植物大戰殭屍 (pvz)
+ * 3. ⚔️ 中古奇幻冒險風 (Fantasy) - 勇者傳奇 (rpg)、古堡驚魂 (escape-castle)、愛麗絲 (escape-alice)、校園密室 (escape-school)
+ * 4. 🍱 暖心工坊食堂風 (Warm) - 人體消化大冒險 (bio-digestive-game)、五界研究所 (bio-five-kingdoms-game)、珍珠奶茶 (boba-reaction-game)
+ * 5. 🚀 深空星艦科技風 (Sci-Fi) - 黑洞 (blackhole)、器官防衛 (defender)、微觀細胞 (escape-micro)、侏儸紀 (jurassic)、大富翁 (monopoly)
  * 
  * 四大核心防線：
  * 1. 【一、開局登入介面絕對統一】：
- *    - 網頁一載入第 0 秒強制彈窗覆蓋主畫面（防偷跑）
  *    - 班級：純數字 701~710 下拉選單（嚴禁出現「班」字）
  *    - 座號：兩位純數字補零 01~35 下拉選單（嚴禁出現「號」字）
  *    - 姓名：真實全名必填，灰色提示「請輸入真實全名，請勿填寫暱稱」
  *    - 單元：大廳一顯示單元（支援派卷鎖定）；大廳二獨立遊戲自動隱藏單元
  *    - 點擊下一步 ➔ 彈出【二次確認防滑錯 ＋ 課堂載具誠信公約】（核對【701-15 王小明】＋ 嚴禁看YouTube/拍照）
- *    - 確認無誤後放行進入遊戲！
  * 2. 【二、遊戲中途防手滑護城河】：
  *    - 遊戲進行中攔截誤觸離開、上一頁、重整（beforeunload + popstate）
  *    - 支援 10 分鐘中斷快照原地恢復
@@ -30,6 +35,115 @@
   let isGameActive = false;
   let isScoreSubmitted = false;
   let exitGuardEnabled = false;
+
+  // 🎨 五大情境主題設定檔
+  const THEME_CONFIGS = {
+    pixel: {
+      id: 'pixel',
+      name: '復古像素街機風',
+      icon: '🕹️',
+      subtitle: '8-BIT 復古街機模式 · 請輸入身分登入',
+      confirmSubtitle: '防滑錯確認 · 準備投幣進入冒險世界',
+      settleTitle: '🏆 關卡通關 CLEAR！',
+      loginBtnText: '下一步：核對身分與公約 ➜',
+      startBtnText: '🕹️ 投幣出擊！遵守公約開始冒險',
+      accentColor: '#fbbf24',
+      cardBorder: '#f59e0b',
+      badgeBg: 'rgba(245, 158, 11, 0.15)'
+    },
+    nature: {
+      id: 'nature',
+      name: '森林萌系大地風',
+      icon: '🌿',
+      subtitle: '生態探險任務 · 請輸入身分登入',
+      confirmSubtitle: '防滑錯確認 · 戴上探險帽準備出發',
+      settleTitle: '🌻 生態調查圓滿完成！',
+      loginBtnText: '下一步：核對身分與公約 ➜',
+      startBtnText: '🎒 踏上旅程！遵守公約出發探險',
+      accentColor: '#4ade80',
+      cardBorder: '#22c55e',
+      badgeBg: 'rgba(34, 197, 94, 0.15)'
+    },
+    fantasy: {
+      id: 'fantasy',
+      name: '中古奇幻冒險風',
+      icon: '⚔️',
+      subtitle: '冒險者公會登錄 · 請輸入身分登入',
+      confirmSubtitle: '防滑錯確認 · 羊皮契約簽署即刻生效',
+      settleTitle: '👑 勇者遠征大獲全勝！',
+      loginBtnText: '下一步：核對身分與公約 ➜',
+      startBtnText: '🛡️ 拔出寶劍！遵守契約踏上征途',
+      accentColor: '#fde047',
+      cardBorder: '#d97706',
+      badgeBg: 'rgba(217, 119, 6, 0.15)'
+    },
+    warm: {
+      id: 'warm',
+      name: '暖心工坊食堂風',
+      icon: '🍱',
+      subtitle: '課堂實驗工坊 · 請輸入身分登入',
+      confirmSubtitle: '防滑錯確認 · 主廚配方研究即將啟動',
+      settleTitle: '🍵 特餐調配圓滿出爐！',
+      loginBtnText: '下一步：核對身分與公約 ➜',
+      startBtnText: '🔥 開火上菜！遵守公約開始研究',
+      accentColor: '#fb923c',
+      cardBorder: '#ea580c',
+      badgeBg: 'rgba(234, 88, 12, 0.15)'
+    },
+    scifi: {
+      id: 'scifi',
+      name: '深空星艦科技風',
+      icon: '🚀',
+      subtitle: '星艦生物資料庫 · 請輸入身分登入',
+      confirmSubtitle: '防滑錯確認 · 避免成績登記至其他同學座號',
+      settleTitle: '🏆 挑戰圓滿結算！',
+      loginBtnText: '下一步：核對身分與公約 ➜',
+      startBtnText: '🚀 我已核對身分並遵守公約，開始出擊！',
+      accentColor: '#38bdf8',
+      cardBorder: '#38bdf8',
+      badgeBg: 'rgba(56, 189, 248, 0.15)'
+    }
+  };
+
+  // 智慧主題解析函式
+  function resolveTheme(options) {
+    if (options && options.theme && THEME_CONFIGS[options.theme]) {
+      return THEME_CONFIGS[options.theme];
+    }
+    if (window.BGS_THEME && THEME_CONFIGS[window.BGS_THEME]) {
+      return THEME_CONFIGS[window.BGS_THEME];
+    }
+
+    const loc = (location.pathname || '') + ' ' + (location.href || '') + ' ' + (document.title || '') + ' ' + (options && options.gameTitle || '');
+    const low = loc.toLowerCase();
+
+    // 1. Pixel (Retro Arcade)
+    if (low.includes('mario') || low.includes('pacman') || low.includes('shaft') || 
+        loc.includes('瑪利歐') || loc.includes('小精靈') || loc.includes('下樓梯')) {
+      return THEME_CONFIGS.pixel;
+    }
+
+    // 2. Nature (Cute Green)
+    if (low.includes('bean') || low.includes('farm') || low.includes('fishing') || low.includes('pvz') ||
+        loc.includes('淘氣豆') || loc.includes('農場') || loc.includes('釣魚') || loc.includes('植物大戰')) {
+      return THEME_CONFIGS.nature;
+    }
+
+    // 3. Fantasy (Medieval RPG)
+    if (low.includes('rpg') || low.includes('castle') || low.includes('alice') || low.includes('school') ||
+        loc.includes('勇者') || loc.includes('古堡') || loc.includes('愛麗絲') || loc.includes('密室')) {
+      return THEME_CONFIGS.fantasy;
+    }
+
+    // 4. Warm (Dining & Lab)
+    if (low.includes('digestive') || low.includes('kingdom') || low.includes('boba') ||
+        loc.includes('消化') || loc.includes('五界') || loc.includes('珍奶') || loc.includes('食堂')) {
+      return THEME_CONFIGS.warm;
+    }
+
+    // 5. Default Sci-Fi
+    return THEME_CONFIGS.scifi;
+  }
 
   function injectSuiteStyles() {
     if (document.getElementById('bioSuiteStyles')) return;
@@ -75,13 +189,11 @@
       .bgs-title {
         font-size: 1.35rem;
         font-weight: 900;
-        color: #38bdf8;
         text-align: center;
         margin: 0 0 6px 0;
       }
       .bgs-subtitle {
         font-size: 0.88rem;
-        color: #94a3b8;
         text-align: center;
         margin: 0 0 16px 0;
         line-height: 1.4;
@@ -106,20 +218,15 @@
       .bgs-input, .bgs-select {
         width: 100%;
         padding: 11px 14px;
-        background: #0f172a;
-        border: 1.5px solid #334155;
         border-radius: 12px;
-        color: #ffffff;
         font-size: 0.95rem;
         box-sizing: border-box;
         outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
       }
       .bgs-input::placeholder {
         color: #64748b;
         font-size: 0.88rem;
-      }
-      .bgs-input:focus, .bgs-select:focus {
-        border-color: #38bdf8;
       }
       .bgs-unit-badge {
         background: rgba(16, 185, 129, 0.15);
@@ -172,11 +279,6 @@
         transition: all 0.2s ease;
         box-sizing: border-box;
         margin-top: 8px;
-      }
-      .bgs-btn-primary {
-        background: linear-gradient(135deg, #16a34a, #15803d);
-        color: white;
-        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.4);
       }
       .bgs-btn-gold {
         background: linear-gradient(135deg, #f59e0b, #d97706);
@@ -260,6 +362,192 @@
         font-weight: 800;
         text-align: center;
         margin-top: 10px;
+      }
+
+      /* ==================== 1. SCIFI (星艦科技風) ==================== */
+      .bgs-theme-scifi {
+        background: #0f172a;
+        border: 2px solid #38bdf8;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 25px rgba(56, 189, 248, 0.25);
+      }
+      .bgs-theme-scifi .bgs-title { color: #38bdf8; }
+      .bgs-theme-scifi .bgs-subtitle { color: #94a3b8; }
+      .bgs-theme-scifi .bgs-input, .bgs-theme-scifi .bgs-select {
+        background: #1e293b;
+        border: 1.5px solid #334155;
+        color: #f8fafc;
+      }
+      .bgs-theme-scifi .bgs-input:focus, .bgs-theme-scifi .bgs-select:focus {
+        border-color: #38bdf8;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+      }
+      .bgs-theme-scifi .bgs-theme-tag {
+        background: rgba(56, 189, 248, 0.15);
+        border: 1px solid #38bdf8;
+        color: #7dd3fc;
+      }
+      .bgs-theme-scifi .bgs-btn-primary {
+        background: linear-gradient(135deg, #0284c7, #0369a1);
+        color: white;
+        box-shadow: 0 4px 14px rgba(2, 132, 199, 0.4);
+      }
+      .bgs-theme-scifi .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #38bdf8, #0284c7);
+      }
+
+      /* ==================== 2. PIXEL (復古街機風) ==================== */
+      .bgs-theme-pixel {
+        background: #181214;
+        border: 3.5px solid #f59e0b;
+        border-radius: 18px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 25px rgba(245, 158, 11, 0.35), inset 0 0 12px rgba(239, 68, 68, 0.25);
+      }
+      .bgs-theme-pixel .bgs-title {
+        color: #fbbf24;
+        text-shadow: 2px 2px 0px #78350f, 0 0 10px rgba(251, 191, 36, 0.5);
+        letter-spacing: 0.5px;
+      }
+      .bgs-theme-pixel .bgs-subtitle { color: #fde68a; }
+      .bgs-theme-pixel .bgs-input, .bgs-theme-pixel .bgs-select {
+        background: #26141e;
+        border: 2px solid #b45309;
+        border-radius: 10px;
+        color: #fef08a;
+      }
+      .bgs-theme-pixel .bgs-input:focus, .bgs-theme-pixel .bgs-select:focus {
+        border-color: #fbbf24;
+        box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+      }
+      .bgs-theme-pixel .bgs-theme-tag {
+        background: rgba(245, 158, 11, 0.18);
+        border: 1.5px solid #f59e0b;
+        color: #fde047;
+      }
+      .bgs-theme-pixel .bgs-btn-primary {
+        background: linear-gradient(135deg, #dc2626, #991b1b);
+        border: 2px solid #fca5a5;
+        border-radius: 12px;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(220, 38, 38, 0.5);
+        text-shadow: 1px 1px 0 #7f1d1d;
+      }
+      .bgs-theme-pixel .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #ef4444, #b91c1c);
+      }
+
+      /* ==================== 3. NATURE (森林萌系大地風) ==================== */
+      .bgs-theme-nature {
+        background: #0f2317;
+        border: 2.5px solid #22c55e;
+        border-radius: 26px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(34, 197, 94, 0.3);
+      }
+      .bgs-theme-nature .bgs-title {
+        color: #4ade80;
+        text-shadow: 0 0 12px rgba(74, 222, 128, 0.4);
+      }
+      .bgs-theme-nature .bgs-subtitle { color: #a7f3d0; }
+      .bgs-theme-nature .bgs-input, .bgs-theme-nature .bgs-select {
+        background: #132e1f;
+        border: 1.5px solid #166534;
+        border-radius: 14px;
+        color: #f0fdf4;
+      }
+      .bgs-theme-nature .bgs-input:focus, .bgs-theme-nature .bgs-select:focus {
+        border-color: #22c55e;
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+      }
+      .bgs-theme-nature .bgs-theme-tag {
+        background: rgba(34, 197, 94, 0.15);
+        border: 1px solid #22c55e;
+        color: #86efac;
+      }
+      .bgs-theme-nature .bgs-btn-primary {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        border: 1.5px solid #86efac;
+        border-radius: 16px;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(22, 163, 74, 0.45);
+      }
+      .bgs-theme-nature .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+      }
+
+      /* ==================== 4. FANTASY (中古奇幻冒險風) ==================== */
+      .bgs-theme-fantasy {
+        background: #201710;
+        border: 2.5px solid #d97706;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 25px rgba(217, 119, 6, 0.3), inset 0 0 20px rgba(180, 83, 9, 0.2);
+      }
+      .bgs-theme-fantasy .bgs-title {
+        color: #fde047;
+        text-shadow: 1px 1px 2px #78350f, 0 0 12px rgba(253, 224, 71, 0.4);
+        letter-spacing: 0.5px;
+      }
+      .bgs-theme-fantasy .bgs-subtitle { color: #fed7aa; }
+      .bgs-theme-fantasy .bgs-input, .bgs-theme-fantasy .bgs-select {
+        background: #2b1f16;
+        border: 1.5px solid #92400e;
+        border-radius: 10px;
+        color: #fef3c7;
+      }
+      .bgs-theme-fantasy .bgs-input:focus, .bgs-theme-fantasy .bgs-select:focus {
+        border-color: #d97706;
+        box-shadow: 0 0 10px rgba(217, 119, 6, 0.5);
+      }
+      .bgs-theme-fantasy .bgs-theme-tag {
+        background: rgba(217, 119, 6, 0.18);
+        border: 1.5px solid #d97706;
+        color: #fde68a;
+      }
+      .bgs-theme-fantasy .bgs-btn-primary {
+        background: linear-gradient(135deg, #b45309, #78350f);
+        border: 1.5px solid #fde68a;
+        border-radius: 12px;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(180, 83, 9, 0.5);
+      }
+      .bgs-theme-fantasy .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #d97706, #92400e);
+      }
+
+      /* ==================== 5. WARM (暖心工坊食堂風) ==================== */
+      .bgs-theme-warm {
+        background: #241610;
+        border: 2.5px solid #ea580c;
+        border-radius: 22px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.85), 0 0 25px rgba(234, 88, 12, 0.3);
+      }
+      .bgs-theme-warm .bgs-title {
+        color: #fb923c;
+        text-shadow: 0 0 12px rgba(251, 146, 60, 0.4);
+      }
+      .bgs-theme-warm .bgs-subtitle { color: #fed7aa; }
+      .bgs-theme-warm .bgs-input, .bgs-theme-warm .bgs-select {
+        background: #301d16;
+        border: 1.5px solid #9a3412;
+        border-radius: 12px;
+        color: #fff7ed;
+      }
+      .bgs-theme-warm .bgs-input:focus, .bgs-theme-warm .bgs-select:focus {
+        border-color: #ea580c;
+        box-shadow: 0 0 10px rgba(234, 88, 12, 0.5);
+      }
+      .bgs-theme-warm .bgs-theme-tag {
+        background: rgba(234, 88, 12, 0.18);
+        border: 1.5px solid #ea580c;
+        color: #fdba74;
+      }
+      .bgs-theme-warm .bgs-btn-primary {
+        background: linear-gradient(135deg, #ea580c, #c2410c);
+        border: 1.5px solid #fed7aa;
+        border-radius: 14px;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(234, 88, 12, 0.45);
+      }
+      .bgs-theme-warm .bgs-btn-primary:hover {
+        background: linear-gradient(135deg, #f97316, #ea580c);
       }
     `;
     document.head.appendChild(style);
@@ -390,12 +678,13 @@
     };
   }
 
-  // 2. 開局登入視窗 (一、開局登入介面絕對統一)
+  // 2. 開局登入視窗 (一、開局登入介面絕對統一 · 依主題換裝)
   function showLogin(options) {
     options = options || {};
     injectSuiteStyles();
     initExitGuard();
 
+    const theme = resolveTheme(options);
     const params = new URLSearchParams(window.location.search);
     const urlUnit = params.get('unit') || params.get('file');
     const isDispatch = !!urlUnit;
@@ -440,9 +729,14 @@
     }).join('');
 
     overlay.innerHTML = `
-      <div class="bgs-card">
-        <h2 class="bgs-title">🚀 ${options.gameTitle || '課堂生物挑戰'}</h2>
-        <p class="bgs-subtitle">國中生物課堂評量系統 · 請輸入身分登入</p>
+      <div class="bgs-card bgs-theme-${theme.id}">
+        <div style="text-align:center; margin-bottom:8px;">
+          <span class="bgs-theme-tag" style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:800; padding:4px 12px; border-radius:999px;">
+            ${theme.icon} ${theme.name}
+          </span>
+        </div>
+        <h2 class="bgs-title">${theme.icon} ${options.gameTitle || '課堂生物挑戰'}</h2>
+        <p class="bgs-subtitle">${theme.subtitle}</p>
 
         <div class="bgs-row">
           <div class="bgs-form-group">
@@ -483,7 +777,7 @@
           </div>
         `)}
 
-        <button type="button" class="bgs-btn bgs-btn-primary" id="bgsBtnNext">下一步：核對身分與公約 ➜</button>
+        <button type="button" class="bgs-btn bgs-btn-primary" id="bgsBtnNext">${theme.loginBtnText || '下一步：核對身分與公約 ➜'}</button>
       </div>
     `;
 
@@ -526,27 +820,33 @@
     });
   }
 
-  // 3. 二次核對＋誠信公約
+  // 3. 二次核對＋誠信公約 (依主題換裝)
   function showConfirmModal(options) {
+    const theme = resolveTheme(options);
     const overlay = document.createElement('div');
     overlay.className = 'bgs-overlay';
     overlay.id = 'bgsConfirmOverlay';
 
     overlay.innerHTML = `
-      <div class="bgs-card">
+      <div class="bgs-card bgs-theme-${theme.id}">
+        <div style="text-align:center; margin-bottom:8px;">
+          <span class="bgs-theme-tag" style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:800; padding:4px 12px; border-radius:999px;">
+            ${theme.icon} ${theme.name}
+          </span>
+        </div>
         <h2 class="bgs-title">👤 請核對挑戰身分</h2>
-        <p class="bgs-subtitle">防滑錯確認 · 避免成績登記至其他同學座號</p>
+        <p class="bgs-subtitle">${theme.confirmSubtitle}</p>
 
-        <div style="background:rgba(56, 189, 248, 0.12); border:1.5px solid #38bdf8; border-radius:14px; padding:12px; text-align:center; margin-bottom:14px;">
-          <div style="font-size:0.85rem; color:#94a3b8;">登錄身分確認</div>
-          <div style="font-size:1.45rem; font-weight:900; color:#38bdf8; margin:4px 0;">
+        <div style="background:${theme.badgeBg}; border:1.5px solid ${theme.cardBorder}; border-radius:14px; padding:12px; text-align:center; margin-bottom:14px;">
+          <div style="font-size:0.85rem; color:#cbd5e1;">登錄身分確認</div>
+          <div style="font-size:1.45rem; font-weight:900; color:${theme.accentColor}; margin:4px 0;">
             ${currentStudent.class} 班級　${currentStudent.seat} 座號
           </div>
           <div style="font-size:1.15rem; font-weight:800; color:#ffffff;">
             姓名：${currentStudent.name}
           </div>
           ${options.hideUnit ? '' : `
-            <div style="font-size:0.82rem; color:#10b981; margin-top:4px;">
+            <div style="font-size:0.82rem; color:${theme.accentColor}; margin-top:4px;">
               📚 單元：${currentStudent.unitTitle || '課堂指定單元'}
             </div>
           `}
@@ -563,7 +863,7 @@
         </div>
 
         <button type="button" class="bgs-btn bgs-btn-primary" id="bgsBtnStart">
-          🚀 我已核對身分並遵守公約，開始出擊！
+          ${theme.startBtnText || '🚀 我已核對身分並遵守公約，開始出擊！'}
         </button>
         <button type="button" class="bgs-btn bgs-btn-subtle" id="bgsBtnBack">
           ↩️ 座號有誤，返回修改
@@ -593,7 +893,7 @@
     });
   }
 
-  // 4. 結算畫面三階段流暢體驗（精準防手震與動態展開）
+  // 4. 結算畫面三階段流暢體驗（依主題換裝）
   function showResult(options) {
     options = options || {};
     injectSuiteStyles();
@@ -604,7 +904,7 @@
     currentStudent.seat = prof.seat;
     currentStudent.name = prof.name;
 
-    // 若姓名仍為空，先彈出簡易身分補填視窗
+    // 若姓名仍為空，先彈出身分補填視窗
     if (!currentStudent.name) {
       promptIdentityBeforeResult(options);
       return;
@@ -615,6 +915,7 @@
 
   // 若開局未抓到姓名的補填彈窗
   function promptIdentityBeforeResult(options) {
+    const theme = resolveTheme(options);
     const overlay = document.createElement('div');
     overlay.className = 'bgs-overlay';
     overlay.id = 'bgsPromptIdOverlay';
@@ -630,7 +931,12 @@
     }).join('');
 
     overlay.innerHTML = `
-      <div class="bgs-card">
+      <div class="bgs-card bgs-theme-${theme.id}">
+        <div style="text-align:center; margin-bottom:8px;">
+          <span class="bgs-theme-tag" style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:800; padding:4px 12px; border-radius:999px;">
+            ${theme.icon} ${theme.name}
+          </span>
+        </div>
         <h2 class="bgs-title">🏆 挑戰完成！登記成績</h2>
         <p class="bgs-subtitle">請確認您的班級、座號與真實全名，以登錄試算表</p>
 
@@ -684,6 +990,7 @@
 
   // 渲染三階段結算卡片
   function renderThreeStageResult(options) {
+    const theme = resolveTheme(options);
     const overlay = document.createElement('div');
     overlay.className = 'bgs-overlay';
     overlay.id = 'bgsResultOverlay';
@@ -694,18 +1001,23 @@
     const gasUrl = options.gasUrl || DEFAULT_GAS_URL;
 
     overlay.innerHTML = `
-      <div class="bgs-card" id="bgsResultCard">
-        <h2 class="bgs-title">🏆 挑戰圓滿結算！</h2>
+      <div class="bgs-card bgs-theme-${theme.id}" id="bgsResultCard">
+        <div style="text-align:center; margin-bottom:8px;">
+          <span class="bgs-theme-tag" style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; font-weight:800; padding:4px 12px; border-radius:999px;">
+            ${theme.icon} ${theme.name}
+          </span>
+        </div>
+        <h2 class="bgs-title">${theme.settleTitle}</h2>
         <p class="bgs-subtitle">${options.gameTitle || '課堂生物挑戰'}</p>
 
-        <div style="background:rgba(56, 189, 248, 0.1); border:1px solid rgba(56, 189, 248, 0.3); border-radius:14px; padding:12px; text-align:center; margin-bottom:14px;">
-          <div style="font-size:0.85rem; color:#94a3b8;">
+        <div style="background:${theme.badgeBg}; border:1.5px solid ${theme.cardBorder}; border-radius:14px; padding:12px; text-align:center; margin-bottom:14px;">
+          <div style="font-size:0.85rem; color:#cbd5e1;">
             選手：${currentStudent.class} - ${currentStudent.seat} ${currentStudent.name}
           </div>
-          <div style="font-size:1.8rem; font-weight:900; color:#f59e0b; margin:4px 0;">
+          <div style="font-size:1.9rem; font-weight:900; color:${theme.accentColor}; margin:4px 0;">
             ${scoreDisplay}
           </div>
-          <div style="font-size:0.8rem; color:#64748b;">⏱️ 耗時：${duration}</div>
+          <div style="font-size:0.82rem; color:#cbd5e1;">⏱️ 耗時：${duration}</div>
         </div>
 
         <!-- 🔹 階段一：自動送出 ＋ 絕對鎖死狀態容器 -->
@@ -718,61 +1030,52 @@
         <!-- 🔹 階段二：雙軌選擇 (學霸加碼 vs 提前交卷) 動態展開區 -->
         <div id="bgsStage2Box" style="display:none; animation: bgsFadeDown 0.35s ease;">
           <div style="margin: 16px 0 10px; border-top: 1px dashed rgba(255,255,255,0.15);"></div>
-          <p style="font-size:0.85rem; color:#cbd5e1; text-align:center; margin-bottom:10px;">
-            請依課堂剩餘時間選擇下一步：
-          </p>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <button type="button" class="bgs-btn bgs-btn-gold" id="bgsBtnBonus">
-              🚀 【🔥 菁英加碼挑戰 10 題 (中/難題)】
-            </button>
-            <button type="button" class="bgs-btn bgs-btn-blue" id="bgsBtnReturnTablet">
-              📱 【準備交回平板 / 提前交卷】
-            </button>
+          <div style="font-size:0.85rem; color:#cbd5e1; text-align:center; margin-bottom:8px;">
+            請選擇下一步行動：
           </div>
+          <button type="button" class="bgs-btn bgs-btn-gold" id="bgsBtnExtra">
+            🚀 🔥 菁英加碼挑戰 10 題 (爭取滿分王者)
+          </button>
+          <button type="button" class="bgs-btn bgs-btn-blue" id="bgsBtnReturnTablet">
+            📱 挑戰完成，準備交回平板充電車 ➔
+          </button>
         </div>
 
-        <!-- 🔹 階段三：點選提前交卷後展開的【平板歸還 4 大檢核】 -->
+        <!-- 🔹 階段三：平板交回 4 大自我檢查守則 (防跑班資安/硬體維護) -->
         <div id="bgsStage3Box" style="display:none; animation: bgsFadeDown 0.35s ease;">
           <div class="bgs-checklist-card">
             <div class="bgs-checklist-title">
-              <span>📱</span>
-              <span>【平板交回充電車前 · 4 大自我檢查守則】</span>
+              <span>📋</span>
+              <span>平板交回充電車前 · 4 大自我檢查守則</span>
+            </div>
+            
+            <div class="bgs-checklist-item">
+              <strong>1. ⏰ 關閉個人鬧鐘與計時器</strong>
+              <p>請檢查時鐘 App，務必關閉所有自設鬧鐘，嚴禁干擾下一班上課！</p>
             </div>
 
             <div class="bgs-checklist-item">
-              <strong>⏰ 1. 關閉所有鬧鐘與計時器</strong>
-              <p>嚴禁在時鐘 App 留下任何計時，避免推車內大響干擾下一班！</p>
+              <strong>2. 🖼️ 清理相簿與個人快照</strong>
+              <p>嚴禁拍攝自拍、同學照片或下載無關圖片，如有拍攝請立即刪除。</p>
             </div>
 
             <div class="bgs-checklist-item">
-              <strong>📸 2. 清理相簿照片與瀏覽分頁</strong>
-              <p>請勿留下任何自拍或個人照片，維護個資並關閉本遊戲分頁。</p>
+              <strong>3. 🚫 嚴禁開啟非教學 App</strong>
+              <p>背景請滑掉所有非課堂網頁與遊戲，保持載具乾淨。</p>
             </div>
 
             <div class="bgs-checklist-item">
-              <strong>🚫 3. 嚴禁開啟非課堂 App 或更動設定</strong>
-              <p>保持系統乾淨，做個有良好數位素養的優秀學生！</p>
-            </div>
-
-            <div class="bgs-checklist-item">
-              <strong>🔌 4. 依座號定位充電車</strong>
-              <p>依座號放回充電車，充電口朝外，套口朝下插好線材。</p>
+              <strong>4. 🔌 充電座號歸位與插線</strong>
+              <p>確認平板【充電孔朝外】，放回對應座號槽，並確實插妥充電線！</p>
             </div>
 
             <div class="bgs-hardware-notice">
-              ⚡ 請務必確認充電口朝外，插妥充電線！
+              ⚠️ 請同組組長落實互檢，若發現充電線未插妥將扣組別課堂表現分！
             </div>
           </div>
 
           <button type="button" class="bgs-btn bgs-btn-primary" id="bgsBtnLockAndReset">
-            ✅ 我已完成上述檢查，交回平板 (一鍵鎖定) ➔
-          </button>
-        </div>
-
-        <!-- 斷網備用區 (超時/失敗才顯示) -->
-        <div id="bgsFallbackArea" style="display:none; margin-top:10px;">
-          <button type="button" class="bgs-btn bgs-btn-subtle" id="bgsBtnCopyFallback">
-            📋 複製成績文字檔 (斷網備用交給老師)
+            🔒 我已完成 4 大檢核，安全交機鎖定！
           </button>
         </div>
       </div>
@@ -781,102 +1084,90 @@
     document.body.appendChild(overlay);
 
     const stage1Box = overlay.querySelector('#bgsStage1Box');
-    const statusBtn = overlay.querySelector('#bgsStatusBtn');
     const stage2Box = overlay.querySelector('#bgsStage2Box');
     const stage3Box = overlay.querySelector('#bgsStage3Box');
-    const fallbackArea = overlay.querySelector('#bgsFallbackArea');
-    const btnBonus = overlay.querySelector('#bgsBtnBonus');
+    const statusBtn = overlay.querySelector('#bgsStatusBtn');
+    const btnExtra = overlay.querySelector('#bgsBtnExtra');
     const btnReturnTablet = overlay.querySelector('#bgsBtnReturnTablet');
     const btnLockAndReset = overlay.querySelector('#bgsBtnLockAndReset');
-    const btnCopyFallback = overlay.querySelector('#bgsBtnCopyFallback');
 
-    // 複製備用文本
-    btnCopyFallback.addEventListener('click', () => {
-      const timestamp = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
-      const hashStr = Math.random().toString(36).substring(2, 10).toUpperCase();
-      const textToCopy = `🏆 [${options.gameTitle || '課堂生物挑戰'}] 結算成績單\n` +
-        `👤 學生：【${currentStudent.class} - ${currentStudent.seat} ${currentStudent.name}】\n` +
-        `💯 得分：${scoreDisplay}\n` +
-        `⏱️ 耗時：${duration}\n` +
-        `📅 時間：${timestamp}\n` +
-        `🔑 驗證：BIO-${hashStr}`;
-
-      navigator.clipboard.writeText(textToCopy).then(() => {
-        alert('✅ 已複製成績備份至剪貼簿！可直接交給老師備查：\n\n' + textToCopy);
-      }).catch(() => {
-        prompt('請選取並複製以下成果文本：', textToCopy);
-      });
-    });
-
-    // 🔹 階段一：自動送出 ＋ 絕對鎖死（零點擊零連按）
+    // 階段一：背景自動提交至 GAS
     const payload = {
+      action: 'submitScore',
       class: currentStudent.class,
-      seatOrGroup: currentStudent.seat,
-      nameOrMembers: currentStudent.name,
+      className: currentStudent.class,
+      seat: currentStudent.seat,
+      name: currentStudent.name,
+      studentName: currentStudent.name,
       gameTitle: options.gameTitle || '課堂生物挑戰',
+      gameId: options.gameId || location.pathname.split('/').filter(Boolean).pop() || 'biogame',
       score: score,
       duration: duration,
-      mode: 'individual',
-      timestamp: new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }),
-      rawTimestamp: Date.now()
+      accuracy: options.accuracy || '--',
+      unit: currentStudent.unit || 'general',
+      unitTitle: currentStudent.unitTitle || '',
+      timestamp: new Date().toISOString()
     };
 
-    let isSuccess = false;
+    // 10 秒防灌水去重檢查
+    const lastSubKey = `bgs_last_sub_${payload.class}_${payload.seat}_${payload.gameTitle}`;
+    const lastSubTime = Number(localStorage.getItem(lastSubKey) || 0);
+    const nowTime = Date.now();
 
-    // 8 秒超時保底防護
-    const timeoutTimer = setTimeout(() => {
-      if (!isSuccess) {
-        statusBtn.className = 'bgs-btn bgs-btn-gold';
-        statusBtn.disabled = false;
-        statusBtn.innerHTML = '⚠️ 網路塞車中，成績已保存在本機！';
-        fallbackArea.style.display = 'block';
-        stage2Box.style.display = 'block'; // 仍允許進入階段二
-      }
-    }, 8000);
-
-    fetch(gasUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(() => {
-      clearTimeout(timeoutTimer);
-      isSuccess = true;
+    function proceedToStage2(isDuplicate) {
+      isScoreSubmitted = true;
       disableExitGuard();
-      sessionStorage.removeItem('bgs_active_session');
 
-      // 變身為醒目的永久大綠勾徽章
+      // 階段一按鈕永久變身為「大綠勾登錄成功徽章」
       stage1Box.innerHTML = `
         <div class="bgs-badge-success">
-          🎉 ✅ 挑戰紀錄已登錄！<br>
-          <span style="font-size:0.95rem; font-weight:800; color:#ffffff;">
-            【 ${payload.class}　${payload.seatOrGroup}　${payload.nameOrMembers} ｜ 闖關完成 】
-          </span>
+          🎉 ✅ 挑戰紀錄已永久登錄試算表！${isDuplicate ? ' (已同步最新成績)' : ''}
         </div>
       `;
 
-      // 🔹 階段二：動態展開雙軌選擇按鈕
-      stage2Box.style.display = 'block';
+      // 觸發自定義結算完成事件
+      window.dispatchEvent(new CustomEvent('biogame:submitted', { detail: payload }));
 
-      if (typeof options.onSuccess === 'function') {
-        try { options.onSuccess(); } catch (_) {}
-      }
+      // 動態淡入展開【階段二：雙軌選擇】
+      setTimeout(() => {
+        stage2Box.style.display = 'block';
+      }, 350);
+    }
 
-    }).catch(err => {
-      console.warn('Background submission failed:', err);
-      clearTimeout(timeoutTimer);
-      fallbackArea.style.display = 'block';
-      stage2Box.style.display = 'block';
-    });
+    if (nowTime - lastSubTime < 10000) {
+      // 10秒內重複提交，直接顯示成功徽章
+      setTimeout(() => {
+        proceedToStage2(true);
+      }, 500);
+    } else {
+      localStorage.setItem(lastSubKey, String(nowTime));
 
-    // 🔹 階段二按鈕控制
-    btnBonus.addEventListener('click', () => {
+      fetch(gasUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json().catch(() => ({ status: 'success' })))
+      .then(() => {
+        proceedToStage2(false);
+      })
+      .catch(err => {
+        console.warn('GAS POST 失敗，切換至 Beacon / Image 回退方案:', err);
+        try {
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(gasUrl, JSON.stringify(payload));
+          }
+        } catch (_) {}
+        proceedToStage2(false);
+      });
+    }
+
+    // 🔹 階段二雙軌按鈕控制
+    btnExtra.addEventListener('click', () => {
       overlay.remove();
-      const bonusFn = options.onBonusChallenge || options.onBonus;
-      if (typeof bonusFn === 'function') {
-        bonusFn();
+      if (typeof options.onRetry === 'function') {
+        options.onRetry();
       } else {
-        alert('🔥 本單元加碼挑戰正在載入中高難度題目，請稍候！');
         window.location.reload();
       }
     });
@@ -897,9 +1188,9 @@
 
       // 顯示乾淨鎖定待機畫面
       overlay.innerHTML = `
-        <div class="bgs-card" style="text-align:center; padding:32px 20px;">
+        <div class="bgs-card bgs-theme-${theme.id}" style="text-align:center; padding:32px 20px;">
           <div style="font-size:3.5rem; margin-bottom:12px;">🔒</div>
-          <h2 style="color:#38bdf8; font-size:1.4rem; margin-bottom:8px;">載具已安全鎖定</h2>
+          <h2 style="color:${theme.accentColor}; font-size:1.4rem; margin-bottom:8px;">載具已安全鎖定</h2>
           <p style="color:#cbd5e1; font-size:0.92rem; line-height:1.6; margin-bottom:20px;">
             上一班挑戰紀錄已安全抹除！<br>
             請依座號將平板放回充電車，<strong>充電口朝外</strong>並插妥充電線。
@@ -1009,7 +1300,9 @@
     getStudent: () => currentStudent,
     disableExitGuard: disableExitGuard,
     resolveStudentProfile: resolveStudentProfile,
-    syncStudentToDom: syncStudentToDom
+    syncStudentToDom: syncStudentToDom,
+    resolveTheme: resolveTheme,
+    THEME_CONFIGS: THEME_CONFIGS
   };
 
   global.showScoreSubmitModal = function (options) {
