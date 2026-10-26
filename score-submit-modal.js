@@ -1521,11 +1521,12 @@
     const cleanTitle = rawTitle.replace(/[【】\[\]]/g, '').split('|')[0].split('-')[0].trim();
 
     // 判定是否為大廳二獨立遊戲
-    const isStandalone = location.href.includes('bio-standalone-games') || 
-                         location.href.includes('bio-digestive-game') ||
-                         location.href.includes('bio-five-kingdoms-game') ||
-                         location.href.includes('人體消化') || 
-                         location.href.includes('五界');
+    const hrefStr = (typeof location !== 'undefined' && location.href) ? location.href : '';
+    const isStandalone = hrefStr.includes('bio-standalone-games') || 
+                         hrefStr.includes('bio-digestive-game') ||
+                         hrefStr.includes('bio-five-kingdoms-game') ||
+                         hrefStr.includes('人體消化') || 
+                         hrefStr.includes('五界');
 
     // 零延遲立即彈出，徹底杜絕舊版元素閃現
     showLogin({
