@@ -1,6 +1,6 @@
 /**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
- * 版本: v4.2 (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
+ * 版本: v4.3 (真實題庫動態聯動 · 精選快問快答秒開 · 開局安全凍結守門員) (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
  * 
  * 🎨 五大情境主題（外觀自動隨遊戲調配，底層標準 100% 嚴格統一）：
  * 1. 🕹️ 復古像素街機風 (Pixel) - 瑪利歐 (mario)、小精靈 (pacman)、下樓梯 (shaft)
@@ -850,6 +850,39 @@
     window.playerProfile = { cls: student.class, seat: student.seat, name: student.name };
     window.studentProfile = { className: student.class, seat: student.seat, name: student.name };
     window.currentStudent = student;
+
+    // ⭐ 題庫單元雙向同步至底層遊戲
+    if (student.unit && student.unit !== 'FAST_DEFAULT') {
+      const unitSelects = [
+        document.getElementById('selectUnit'),
+        document.getElementById('unitSelect'),
+        document.getElementById('modal-unit-select'),
+        document.getElementById('unit-select')
+      ];
+      unitSelects.forEach(sel => {
+        if (!sel) return;
+        let matched = false;
+        for (let i = 0; i < sel.options.length; i++) {
+          if (sel.options[i].value === student.unit || (student.unit && sel.options[i].value.includes(student.unit))) {
+            sel.selectedIndex = i;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched && student.unitTitle) {
+          for (let i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].text.includes(student.unitTitle) || student.unitTitle.includes(sel.options[i].text)) {
+              sel.selectedIndex = i;
+              matched = true;
+              break;
+            }
+          }
+        }
+        try {
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+        } catch (_) {}
+      });
+    }
   }
 
   // 自動解析學生資訊輔助函式
@@ -940,6 +973,38 @@
     const gTitle = (options && options.gameTitle ? options.gameTitle : '').toLowerCase();
 
     // 大廳二或獨立專案嚴格檢測 (含本機與 GitHub Pages 網址)
+    // ⭐ 動態讀取底層現有單元選單，若無則提供真實單元與秒開快問快答
+    let unitOptionsHtml = '';
+    const existingUnitSelect = document.getElementById('selectUnit') || 
+                               document.getElementById('unitSelect') || 
+                               document.getElementById('modal-unit-select') || 
+                               document.getElementById('unit-select');
+
+    if (existingUnitSelect && existingUnitSelect.options.length > 1) {
+      unitOptionsHtml += '<option value="FAST_DEFAULT">🎯 課堂快問快答 (內建精選題庫 · 快速測試秒開)</option>';
+      for (let i = 0; i < existingUnitSelect.options.length; i++) {
+        const opt = existingUnitSelect.options[i];
+        if (opt.value && opt.value !== 'FAST_DEFAULT') {
+          unitOptionsHtml += `<option value="${opt.value}">${opt.text}</option>`;
+        }
+      }
+    } else {
+      unitOptionsHtml = `
+        <option value="FAST_DEFAULT" selected>🎯 課堂快問快答 (內建精選題庫 · 快速測試秒開)</option>
+        <option value="翰林版/bio01/bio01_1-1生命現象.json">[7上] 1-1 生命現象</option>
+        <option value="翰林版/bio01/bio01_1-2科學方法.json">[7上] 1-2 科學方法</option>
+        <option value="翰林版/bio01/bio01_1-3實驗室與顯微鏡使用.json">[7上] 1-3 顯微鏡使用</option>
+        <option value="翰林版/bio01/bio01_2-1細胞學說與細胞型態.json">[7上] 2-1 細胞學說</option>
+        <option value="翰林版/bio01/bio01_2-2細胞構造.json">[7上] 2-2 細胞構造</option>
+        <option value="翰林版/bio01/bio01_2-3物質進出細胞的方式.json">[7上] 2-3 物質進出細胞</option>
+        <option value="翰林版/bio01/bio01_3-1食物中的養分.json">[7上] 3-1 食物中的養分</option>
+        <option value="翰林版/bio01/bio01_3-2酵素.json">[7上] 3-2 酵素作用</option>
+        <option value="翰林版/bio01/bio01_4-1人體血液與心臟循環.json">[7上] 4-1 人體血液循環</option>
+        <option value="翰林版/bio01/bio01_5-1神經系統.json">[7上] 5-1 神經系統與反射</option>
+        <option value="翰林版/bio01/bio01_6-1恆定性與體溫.json">[7上] 6-1 體溫與恆定性</option>
+      `;
+    }
+
     const isStandalone = !!(options.isStandalone || options.fixedUnit ||
       hrefStr.includes('bio-standalone-games') ||
       hrefStr.includes('bio-digestive-game') ||
@@ -1052,13 +1117,7 @@
           <div class="bgs-form-group">
             <label class="bgs-label">選擇複習單元</label>
             <select class="bgs-select" id="bgsUnitSelect">
-              <option value="unit01_scientific_method">[7上] 1-1 科學方法與生命現象</option>
-              <option value="unit02_cells">[7上] 1-2 細胞構造與顯微鏡</option>
-              <option value="unit03_transport">[7上] 2-1 物質進出細胞與擴散</option>
-              <option value="unit04_nutrition">[7上] 3-1 養分消化與酵素作用</option>
-              <option value="unit05_circulation">[7上] 4-1 人體血液與心臟循環</option>
-              <option value="unit06_coordination">[7上] 5-1 神經傳導與反射協調</option>
-              <option value="unit07_homeostasis">[7上] 6-1 呼吸體溫恆定與排泄</option>
+              ${unitOptionsHtml}
             </select>
           </div>
         `))}
@@ -1087,7 +1146,7 @@
         return;
       }
 
-      const chosenUnit = isStandalone ? 'standalone_fixed' : (isDispatch ? urlUnit : (overlay.querySelector('#bgsUnitSelect')?.value || 'unit01_scientific_method'));
+      const chosenUnit = isStandalone ? 'standalone_fixed' : (isDispatch ? urlUnit : (overlay.querySelector('#bgsUnitSelect')?.value || 'FAST_DEFAULT'));
       const chosenUnitTitle = isStandalone ? standaloneUnitName : (isDispatch ? unitTitle : (overlay.querySelector('#bgsUnitSelect')?.selectedOptions[0]?.text || unitTitle));
 
       currentStudent = {
