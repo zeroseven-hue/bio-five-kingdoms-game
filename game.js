@@ -1,479 +1,93 @@
 'use strict';
-
-const $ = id => document.getElementById(id);
-const K = { monera: '原核生物界', protista: '原生生物界', fungi: '真菌界', plantae: '植物界', animalia: '動物界' };
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-const THEME_NAMES = {
-    micro: '微觀奇兵大餐',
-    plants: '植感大餐',
-    animals: '動物派對大餐',
-    mixed: '迴轉混合大餐'
-};
-
-let theme = 'mixed', nextTheme = 'mixed', banks = {}, queue = [], roundSpecies = [], completedLog = [];
-let data = null, lanes = [], belt = [], orders = [], selected = null;
-let score = 0, combo = 0, done = 0, attempts = 0, correct = 0, shuffleCount = 999, active = false, busy = false, mode = 'learn', sound = true, ctx;
-
-let profile = { coins: 0, best: 0, plate: 'default', decor: 'mint', owned: ['default', 'mint'], seen: [] };
-
-try {
-    const old = JSON.parse(localStorage.getItem('bio_sushi_v4') || 'null');
-    if (old) {
-        if (Number.isFinite(old.coins)) profile.coins = Math.floor(old.coins);
-        if (Number.isFinite(old.best)) profile.best = old.best;
-        if (Array.isArray(old.seen)) profile.seen = old.seen;
-    }
-} catch (e) {}
-
-function save() {
-    try { localStorage.setItem('bio_sushi_v4', JSON.stringify(profile)); } catch (e) {}
-}
-
-function status(t) { $('status').textContent = t; }
-
-function audio(kind) {
-    if (!sound) return;
-    try {
-        const A = window.AudioContext || window.webkitAudioContext;
-        if (!A) return;
-        ctx ??= new A();
-        if (ctx.state === 'suspended') ctx.resume().catch(() => {});
-        const notes = kind === 'success' ? [523, 659, 784] : kind === 'complete' ? [523, 659, 784, 1047] : kind === 'wrong' ? [330, 262] : [420, 700];
-        notes.forEach((f, i) => {
-            const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + i * .07;
-            o.type = kind === 'wrong' ? 'sawtooth' : 'sine';
-            o.frequency.setValueAtTime(f * (kind === 'success' ? 1 + Math.min(combo, 8) * .025 : 1), t);
-            g.gain.setValueAtTime(.0001, t);
-            g.gain.exponentialRampToValueAtTime(.05, t + .008);
-            g.gain.exponentialRampToValueAtTime(.0001, t + .15);
-            o.connect(g); g.connect(ctx.destination);
-            o.start(t); o.stop(t + .16);
-            o.onended = () => { o.disconnect(); g.disconnect(); };
-        });
-    } catch (e) {}
-}
-
-function art(s) {
-    const n = s.name;
-    let shape = '';
-    const eyes = '<circle cx="43" cy="44" r="2" fill="#304748"/><circle cx="57" cy="44" r="2" fill="#304748"/><path d="M47 50q3 3 6 0" fill="none"/><circle cx="36" cy="49" r="3" fill="#e8ac9f" stroke="none"/>';
-    
-    if (s.kingdom === 'monera') {
-        shape = n === '藍綠菌' ? '<g fill="#a9d5c3"><circle cx="20" cy="40" r="10"/><circle cx="39" cy="39" r="11"/><circle cx="59" cy="41" r="11"/><circle cx="79" cy="40" r="10"/></g><path d="M15 40h7m12-3h8m12 5h8m11-4h7"/>' : '<rect x="23" y="25" width="54" height="34" rx="17" fill="#f3cb9d"/><path d="M77 42q15-15 14 7M28 23l-4-6m24 6v-7m24 8 5-7M28 61l-4 7m24-7v7"/><path d="M35 39q6-8 11 0t11 0t10 0" fill="none"/>';
-    } else if (n === '草履蟲') {
-        shape = '<ellipse cx="50" cy="41" rx="34" ry="20" fill="#e7cfed"/><path d="M19 26l-6-5m17-3-2-6m18 8v-8m16 10 3-8m13 21 8-3m-2 17 7 5M25 56l-5 7m22-1v7m19-9 3 7"/>';
-    } else if (n === '變形蟲') {
-        shape = '<path d="M19 40q-16-19 5-19l17 6q4-22 18-10l-2 14q34-16 25 5l-12 9q28 17 5 19l-22-9q-16 23-23 5l4-13q-21 12-15-7Z" fill="#c9dfee"/>';
-    } else if (n === '酵母菌') {
-        shape = '<ellipse cx="48" cy="43" rx="24" ry="25" fill="#f4d8b0"/><ellipse cx="72" cy="23" rx="12" ry="13" fill="#f4d8b0"/><circle cx="40" cy="36" r="6" fill="#e8bf92" stroke="none"/>';
-    } else if (n === '香菇') {
-        shape = '<path d="M39 43h22l5 27H34Z" fill="#f5e6cb"/><path d="M15 42Q20 8 50 10q30-2 35 32Z" fill="#c58d78"/><path d="M25 37h50" fill="none"/>';
-    } else if (s.kingdom === 'plantae') {
-        shape = '<path d="M50 72V25"/><path d="M50 50Q12 52 20 18q33 0 30 32M51 40q-2-32 30-27 3 27-30 27" fill="#b0d1a5"/><path d="M24 24l22 22m29-27-21 17" fill="none"/>';
-    } else {
-        shape = '<path d="M26 66l5-28h38l6 28Z" fill="#f0bdaf"/><path d="M31 38q-18-15-11-24m20 24q-14-19-5-26m15 26V8m10 30q14-18 5-26m4 26q18-15 11-24" fill="none"/>';
-    }
-    return `<svg viewBox="0 0 100 80" width="48" height="40" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><g stroke="#34494b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${shape}${eyes}</g></svg>`;
-}
-
-function customerAvatar(i) {
-    return ['🧑‍🔬', '👩‍🔬', '👨‍🔬'][i % 3];
-}
-
-function match(o, c) {
-    if (!o || !c) return false;
-    let [type, val] = o.rule.split(':');
-    if (type === 'accepted') return o.acceptedSpecies.includes(c.name);
-    return type === 'kingdom' ? c.kingdom === val : type === 'trait' ? c.traits.includes(val) : false;
-}
-
-const rnd = a => a[Math.floor(Math.random() * a.length)];
-let uid = 0;
-const sample = s => ({ ...s, uid: ++uid });
-
-function shuffled(a) {
-    a = [...a];
-    for (let i = a.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-function chooseMissions() {
-    let chosen = [];
-    let list = theme === 'mixed' ? ['micro', 'plants', 'animals'] : [theme];
-    for (let unit of list) {
-        let basic = shuffled(banks[unit].missions.filter(m => m.difficulty === '基礎'));
-        let hard = shuffled(banks[unit].missions.filter(m => m.difficulty === '挑戰'));
-        chosen.push(...basic.slice(0, theme === 'mixed' ? 2 : 6), ...hard.slice(0, theme === 'mixed' ? 1 : 3));
-    }
-    return shuffled(chosen).map(m => ({ ...m, current: 0, needed: 2 }));
-}
-
-function nextOrder() { return queue.shift() || null; }
-
-function makeLanes() {
-    lanes = Array.from({ length: 5 }, () => Array.from({ length: 4 }, () => sample(rnd(roundSpecies))));
-    orders.forEach((o, i) => {
-        if (o) lanes[i][0] = sample(rnd(data.species.filter(s => match(o, s))));
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const THEMES={micro:'微觀奇兵',plants:'植感大餐',animals:'動物派對',mixed:'五界混合'},KINGDOMS={monera:'原核生物界',protista:'原生生物界',fungi:'真菌界',plantae:'植物界',animalia:'動物界'},SAVE_KEY='biology_dining_v5';
+let game,payload,profile,ready=false,entered=false,busy=false,theme='mixed',mode='learn',pending=null,dialogView='',savedRound=null,storageOK=true,audioCtx,angle=0,last=0,hovered=false,keyFocused=false;
+const reduced=matchMedia('(prefers-reduced-motion: reduce)');let paused=reduced.matches,sound=true;
+let savedRecord=null;try{savedRecord=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(typeof savedRecord?.settings?.sound==='boolean')sound=savedRecord.settings.sound;}catch{storageOK=false;}
+function save(){if(!ready)return;try{localStorage.setItem(SAVE_KEY,JSON.stringify({version:5,profile,round:game.active?game.export():savedRound,settings:{sound},savedAt:new Date().toISOString()}));storageOK=true;}catch{storageOK=false;}storageMessage();}
+function storageMessage(){$('storage-message').hidden=storageOK;$('storage-message').textContent='目前瀏覽器無法儲存進度；關閉或重新整理後，本次資料可能消失。';}
+function tone(kind){if(!sound)return;try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;audioCtx??=new A();audioCtx.resume().catch(()=>{});const notes=kind==='wrong'?[330,294,262]:kind==='complete'?[523,659,784,1047]:[523,659,784];notes.forEach((f,i)=>{const at=audioCtx.currentTime+i*.08,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(.025,at+.015);g.gain.exponentialRampToValueAtTime(.0001,at+.2);o.connect(g);g.connect(audioCtx.destination);o.start(at);o.stop(at+.22);o.onended=()=>{o.disconnect();g.disconnect();};});}catch{}}
+function artStyle(s){const a=BIO_ART[s.name];if(!a)return '';const url=globalThis.BIO_ASSET_URLS?.[a.atlas]||`assets/atlas-${a.atlas}.png`;if(a.crop){const {x,y,w,h}=a.crop;return `--atlas:url('${url}');--bs:${1536/w*100}% ${1024/h*100}%;--sx:${x/(1536-w)*100}%;--sy:${y/(1024-h)*100}%`;}return `--atlas:url('${url}');--bs:400% 200%;--sx:${a.cell%4*100/3}%;--sy:${Math.floor(a.cell/4)*100}%`;}
+function sprite(s,cls=''){return `<span class="sprite ${cls}" style="${artStyle(s)}" aria-hidden="true"></span>`;}
+function markSeen(s){if(!profile.seen.includes(s.name)){profile.seen.push(s.name);save();updateCollection();}}
+function updateCollection(){$('lobby-collection').textContent=profile.seen.length+' / '+payload.biology.species.length;}
+function applyDecor(){const d=BioCore.ITEMS.find(i=>i.id===profile.decor),p=BioCore.ITEMS.find(i=>i.id===profile.plate);document.documentElement.style.setProperty('--sage',d.color);document.documentElement.style.setProperty('--primary-green',d.color);document.documentElement.style.setProperty('--plate-edge',p.color);document.body.dataset.decor=profile.decor;document.body.dataset.plate=profile.plate;}
+function feedback(title,text,kind=''){const f=$('feedback');f.className='feedback '+kind;f.querySelector('strong').textContent=title;f.querySelector('p').textContent=text;f.querySelector('.feedback-symbol').textContent=kind==='wrong'?'↺':kind==='correct'?'✓':'✧';}
+function render(){if(!ready)return;$('coins').textContent=profile.coins;$('sound-toggle').textContent='音效 '+(sound?'開':'關');$('sound-toggle').setAttribute('aria-pressed',String(sound));updateCollection();$('resume').hidden=!savedRound&&!game.active;if(!game.orders)return;$('score').textContent=game.score;$('combo').textContent='×'+game.combo;$('progress').textContent=game.done+' / 9';$('progress-fill').style.width=game.done/9*100+'%';$('capacity').textContent=game.belt.length+' / 7';$('theme-label').textContent=THEMES[game.theme];$('mode-label').textContent=game.mode==='learn'?'陪伴練習':'自主挑戰';$('footer-progress').textContent=`完成 ${game.done} / 9 張 · 已觀察 ${profile.seen.length} / 48 種 · 最高分 ${profile.best}`;
+ $('orders').innerHTML=game.orders.map((o,i)=>o?`<button class="order ${game.orderIndex===i?'active':''}" data-order="${i}" aria-pressed="${game.orderIndex===i}" ${busy?'disabled':''}><span class="order-top"><span>${esc(THEMES[o.unit])}</span><span>${esc(o.difficulty)}</span></span><h3>${esc(o.concept||'生物研究')}</h3><p>${esc(o.text)}</p><span class="order-bottom"><span>正確提交 ${o.current} / 2</span><span class="dots">${'●'.repeat(o.current)+'○'.repeat(2-o.current)}</span></span></button>`:`<div class="order empty-order"><span class="order-top">RESEARCH COMPLETED</span><h3>本席研究完成</h3><p>這一席的委託都已完成，繼續探索其他研究。</p><span class="order-bottom seal">✓ 研究紀錄已收錄</span></div>`).join('');
+ $('slots').innerHTML=Array.from({length:7},(_,i)=>{const s=game.belt[i];return `<button class="slot ${s?'filled':''} ${s?.uid===game.selected?'selected':''}" data-slot="${i}" aria-label="${s?esc(s.name)+'，選取樣本':'空槽位 '+(i+1)}" ${!s||busy?'disabled':''}>${s?sprite(s)+`<span class="slot-name">${esc(s.name)}</span>`:String(i+1).padStart(2,'0')}</button>`;}).join('');
+ const s=game.belt.find(c=>c.uid===game.selected),o=game.orders[game.orderIndex];$('selection').textContent=s?`已選取 ${s.name} → ${o?.concept||'研究完成'}`:'從餐桌挑選你的第一份樣本';for(const id of ['submit','remove','clue'])$(id).disabled=!s||busy||!game.active;for(const id of ['shuffle','restart','shop','journal','timer','go-entrance'])$(id).disabled=busy;
+ plateNodes.forEach((node,i)=>{const c=game.supply[i];node.disabled=busy||!game.active;node.setAttribute('aria-label','觀察'+c.name);node.innerHTML=`<span class="plate-dish"></span>${sprite(c)}<span class="plate-name">${esc(c.name)}</span>`;});motionUI();}
+function motionUI(){const stop=!entered||paused||hovered||keyFocused||$('dialog').open||busy||!game?.active;$('motion-label').textContent=game?.finished?'本次研究完成':stop?'餐桌暫停觀察':'樣本巡遊中';$('pause').textContent=paused?'▷ 繼續巡遊':'Ⅱ 暫停餐桌';$('pause').setAttribute('aria-pressed',String(paused));}
+function show(html,view='',cls=''){const d=$('dialog');d.className=cls;dialogView=view;$('dialog-body').innerHTML=html;if(!d.open)d.showModal();motionUI();}
+function close(){pending=null;dialogView='';$('dialog').close();motionUI();}
+function traits(s){return `<div class="trait-list">${s.traits.map(t=>`<span>${esc(t)}</span>`).join('')}</div><p class="dialog-note">${esc(s.note)}</p>`;}
+function specimen(s,{index=null,from='table',reveal=false}={}){markSeen(s);pending=index;const challenge=entered&&game.mode==='challenge';show(`<div class="observation-layout"><div class="specimen-sheet"><span class="specimen-id">SPECIMEN / ${String(payload.biology.species.indexOf(s)+1).padStart(2,'0')}</span>${sprite(s,'specimen-preview')}<span class="specimen-scale">形態示意 · 非等比例</span></div><div class="observation-content"><div class="dialog-tag">FIELD OBSERVATION</div><h2 class="dialog-name">${esc(s.name)}</h2><p class="observation-subtitle">觀察樣本，尋找分類的線索。</p><div id="trait-panel">${challenge&&!reveal?'<button class="reveal-button" id="reveal-traits">查看觀察線索 ＋</button>':traits(s)}</div>${from==='table'?`<div class="current-question"><span>目前研究委託</span><p>${esc(game.orders[game.orderIndex]?.text)}</p></div>`:`<p class="classification-label">${esc(KINGDOMS[s.kingdom])} · ${profile.studied.includes(s.name)?'已成功鑑定':'尚未成功鑑定'}</p>`}<div class="dialog-actions">${from==='journal'?'<button class="subtle" id="back-journal">← 回樣本圖鑑</button>':'<button class="subtle" id="leave">再看看</button>'}${from==='table'?'<button class="primary" id="take">取樣至工作台 ＋</button>':''}</div></div></div>`,'specimen','wide-dialog');if($('reveal-traits'))$('reveal-traits').onclick=()=>{game.clue();save();$('trait-panel').innerHTML=traits(s);};if($('take'))$('take').onclick=take;if($('leave'))$('leave').onclick=close;if($('back-journal'))$('back-journal').onclick=journal;}
+function inspect(i){if(!game.active||busy)return;specimen(game.supply[i],{index:i});}
+function take(){if(pending===null||busy)return;const i=pending,source=plateNodes[i].getBoundingClientRect(),s=game.supply[i],r=game.pick(i);if(!r.ok){close();feedback('工作台已滿','七格都已有樣本，請先鑑定或放回其中一份。','wrong');return;}close();save();render();const target=$('slots').children[game.belt.length-1].getBoundingClientRect();if(!reduced.matches){const n=document.createElement('div');n.className='flying sprite';n.style.cssText=artStyle(s)+`;left:${source.x+source.width/2-25}px;top:${source.y}px`;document.body.append(n);const a=n.animate([{transform:'translate(0,0) scale(1.2)',opacity:1},{transform:`translate(${target.x+target.width/2-source.x-source.width/2}px,${target.y-source.y}px) scale(.65)`,opacity:.8}],{duration:500,easing:'cubic-bezier(.2,.7,.2,1)'});a.onfinish=()=>n.remove();}feedback('已取樣：'+r.sample.name,'選擇符合的研究委託，再按「送交鑑定」。');}
+async function submit(){if(busy||!game.active||!game.belt.some(c=>c.uid===game.selected))return;busy=true;render();$('submit').textContent='鑑定中…';await new Promise(r=>setTimeout(r,reduced.matches?0:480));const r=game.submit();busy=false;$('submit').textContent='送交鑑定 ↗';if(r.reason==='empty'){render();return;}if(r.ok){profile.coins+=r.coinGain;if(!profile.studied.includes(r.sample.name))profile.studied.push(r.sample.name);tone(r.complete?'complete':'correct');feedback(`${r.sample.name} · 鑑定正確 +${r.gain}${r.complete?' / 委託完成 +50':''}`,r.mission.explanation,'correct');$('workbench').classList.remove('flash');void $('workbench').offsetWidth;$('workbench').classList.add('flash');if(r.finished){profile.best=Math.max(profile.best,game.score);profile.rounds++;savedRound=null;save();render();summary();return;}}else{tone('wrong');feedback(`${r.sample.name} 不符合這張委託`,`${r.mission.explanation} 樣本已保留，可以換一張委託或放回。`,'wrong');}save();render();}
+function summary(){const accuracy=Math.round(game.correct/game.attempts*100),first=Math.round(game.firstCorrect/9*100);const unitStats=BioCore.UNITS.map(u=>{const a=game.attemptLog.filter(x=>x.unit===u);return a.length?`<span>${esc(THEMES[u])} ${Math.round(a.filter(x=>x.ok).length/a.length*100)}%</span>`:'';}).join('');show(`<div class="completion-emblem">研<span>究完成</span></div><div class="dialog-tag">RESEARCH COMPLETE</div><h2 class="dialog-name">九張委託，圓滿完成</h2><p class="dialog-note result-intro">${esc(THEMES[game.theme])} · ${game.mode==='learn'?'陪伴練習':'自主挑戰'}<br>十八次正確的發現，收進今天的研究手記。</p><div class="summary-stats"><div><strong>${game.score}</strong><span>本局得分</span></div><div><strong>${accuracy}%</strong><span>提交正確率（含重試）</span></div><div><strong>+${game.earned}</strong><span>本局研究金幣</span></div></div><div class="extra-stats"><span>各委託首答正確率 ${first}%</span><span>查看線索 ${game.clues} 次</span><span>歷史最高 ${profile.best} 分</span></div><div class="unit-stats">${unitStats}</div><details class="review"><summary>查看九張委託與分類依據</summary>${game.logs.map(m=>`<p class="review-item"><b>${esc(m.text)}</b><br>${esc(m.explanation)}<br><small>來源：${esc(m.source.file)} · 原題 ${esc(m.source.questionId)}</small></p>`).join('')}</details><p class="result-note">首答正確率按每張委託第一次提交計算；圖鑑與主動線索仍可使用，不代表封閉式測驗成績。</p><div class="dialog-actions"><button class="primary" id="result-submit" style="background:linear-gradient(135deg, #16a34a, #15803d); color:white; font-weight:800;">🚀 送出成績至試算表 (優先推薦)</button><button class="subtle" id="result-home">返回餐廳入口</button><button class="primary" id="again">再研究一次 ↻</button></div>`,'result','result-dialog');$('result-home').onclick=entrance;$('again').onclick=()=>startNew(game.theme,game.mode);$('result-submit').onclick=()=>{
+  if(typeof showScoreSubmitModal==='function'){
+    const std = (window.BioGameSuite && window.BioGameSuite.getStudent()) || window.playerProfile || {};
+    showScoreSubmitModal({
+      gameTitle: '五界生物研究餐廳 (' + (THEMES[game.theme] || '五界分類') + ')',
+      class: std.class || std.cls || '701',
+      seat: std.seat || '01',
+      name: std.name || '',
+      score: game.score,
+      scoreDisplay: `${game.score} 分 (正確率 ${accuracy}%)`,
+      duration: `${game.attempts} 次鑑定`
     });
-}
-
-function start() {
-    if (!data) return;
-    theme = nextTheme;
-    score = combo = done = attempts = correct = 0;
-    belt = []; selected = null; busy = false; active = true; completedLog = [];
-    queue = chooseMissions();
-    roundSpecies = data.species.filter(s => theme === 'mixed' || s.unit === theme);
-    orders = Array.from({ length: 3 }, nextOrder);
-    makeLanes();
-    render();
-    status(`🍣 本局大餐：${THEME_NAMES[theme]}。共 9 張顧客委託，點擊生物食材直接出餐！`);
-}
-
-function render() {
-    $('coins').textContent = profile.coins;
-    $('score').textContent = score;
-    $('combo').textContent = '×' + combo;
-    $('progress').textContent = done + ' / 9';
-    $('capacity').textContent = belt.length + ' / 7';
-
-    // 繪製 3 位顧客點餐
-    $('orders').innerHTML = orders.map((o, i) => o ? `
-        <div class="customer-seat" data-order="${i}">
-            <div class="customer-header">
-                <div class="customer-avatar">${customerAvatar(i)}</div>
-                <div class="customer-info">
-                    <h3>${['小葉研究員', '小菇研究員', '阿核研究員'][i]} 點餐</h3>
-                    <small>${THEME_NAMES[o.unit]} · ${o.difficulty}</small>
-                </div>
-            </div>
-            <div class="customer-bubble">💬 需求：${esc(o.text)}</div>
-            <div class="order-progress">
-                <span>進度：${o.current} / ${o.needed}</span>
-                <span style="color:var(--primary-green);">👉 點此送餐</span>
-            </div>
-            <progress max="${o.needed}" value="${o.current}"></progress>
-        </div>
-    ` : `
-        <div class="customer-seat" style="background:#f8fafc; opacity:0.8;">
-            <div class="customer-header">
-                <div class="customer-avatar">✅</div>
-                <div class="customer-info">
-                    <h3>本席顧客已滿意結帳</h3>
-                    <small>繼續完成其他顧客委託</small>
-                </div>
-            </div>
-            <div class="customer-bubble">🎉 太美味了！謝謝大廚！</div>
-        </div>
-    `).join('');
-
-    // 繪製暫存吧台
-    $('belt').innerHTML = Array.from({ length: 7 }, (_, i) => {
-        let c = belt[i];
-        return `<div class="plate-slot ${c ? 'filled' : ''} ${c?.uid === selected ? 'selected' : ''}" data-belt="${i}">
-            ${c ? art(c) + `<strong>${esc(c.name)}</strong>` : String(i + 1)}
-        </div>`;
-    }).join('');
-
-    // 繪製 5 條木紋食材軌道 (任何卡片皆可點擊取樣/出餐)
-    $('lanes').innerHTML = lanes.map((l, i) => `
-        <div class="lane-column">
-            ${l.map((c, j) => `
-                <div class="food-card" data-lane="${i}" data-index="${j}">
-                    ${art(c)}
-                    <strong>${esc(c.name)}</strong>
-                    <small>${mode === 'learn' ? (c.traits[0] || '特徵') : '點擊取樣/出餐'}</small>
-                </div>
-            `).join('')}
-        </div>
-    `).join('');
-
-    let c = belt.find(c => c.uid === selected);
-    $('inspector').innerHTML = c ? `
-        <strong>已選取【${esc(c.name)}】</strong>：${c.traits.map(esc).join('、')} (點上方顧客送餐)
-    ` : '點擊下方軌道上的生物食材取樣，或點暫存盤生物再點顧客進行出餐。';
-}
-
-async function pickCard(laneIndex, cardIndex) {
-    if (!active || busy) return;
-    let c = lanes[laneIndex][cardIndex];
-    if (!c) return;
-
-    // 若暫存盤未滿，放進暫存盤並選取
-    if (belt.length < 7) {
-        audio('pick');
-        lanes[laneIndex].splice(cardIndex, 1);
-        // 補充新食材
-        lanes[laneIndex].push(sample(rnd(roundSpecies)));
-        belt.push(c);
-        selected = c.uid;
-        render();
-        status(`🍣 已取出食材「${c.name}」放入吧台盤！請點上方符合需求的顧客出餐。`);
-    } else {
-        status('吧台暫存盤已滿 7 個！請先選擇一個生物送給顧客，或點「放回食材」。');
-    }
-}
-
-async function submitOrder(orderIndex) {
-    if (!active || busy) return;
-    let o = orders[orderIndex];
-    if (!o) return;
-
-    let c = belt.find(x => x.uid === selected);
-    if (!c && belt.length > 0) c = belt[belt.length - 1]; // 自動預設最後拿取的食材
-
-    if (!c) {
-        status('請先點擊下方的生物食材，再點顧客進行出餐！');
-        return;
-    }
-
-    attempts++;
-    if (!match(o, c)) {
-        combo = 0;
-        audio('wrong');
-        render();
-        status(`❌ 顧客：「【${c.name}】不符合我的需求！」提示：${o.explanation || '請再閱讀題目特徵。'}`);
-        return;
-    }
-
-    correct++;
-    busy = true;
-    audio('success');
-
-    belt = belt.filter(x => x.uid !== c.uid);
-    selected = null;
-    combo++;
-    let gain = 15 + Math.min(combo - 1, 5) * 3;
-    score += gain;
-    profile.coins += 5;
-
-    o.current++;
-    let completed = o.current === o.needed;
-    if (completed) {
-        done++;
-        score += 50;
-        profile.coins += 20;
-        completedLog.push({ id: o.id, text: o.text, unit: o.unit, source: o.source, explanation: o.explanation });
-        orders[orderIndex] = nextOrder();
-    }
-
-    busy = false;
-    render();
-    status(`🎉 正確！出餐【${c.name}】！+${gain} 分${completed ? '；顧客滿意離席，額外 +50 分！' : ''}`);
-    save();
-
-    if (done >= 9) finish();
-}
-
-function finish() {
-    active = false;
-    profile.best = Math.max(profile.best, score);
-    save();
-    render();
-
-    const certId = 'GC-' + Math.floor(1000 + Math.random() * 9000);
-    modal(`
-        <h2 style="color:var(--primary-green); text-align:center;">🎉 恭喜完成五界迴轉大餐！</h2>
-        <p style="text-align:center; color:var(--text-muted);">滿意出餐 9 張顧客委託，獲得頂級星級大廚認證！</p>
-        
-        <div style="background:#ecfdf5; border:2px dashed #6ee7b7; border-radius:16px; padding:16px; margin:16px 0; text-align:center;">
-            <p style="font-size:13px; color:#047857; font-weight:700;">📜 Google Classroom 防偽認證證書</p>
-            <h3 style="font-size:22px; color:var(--wood-dark); margin:6px 0;">認證碼：${certId}</h3>
-            <p style="font-size:12px; color:var(--text-muted);">本局得分：${score} 分 ｜ 提交正確率：${Math.round(correct / attempts * 100)}%</p>
-        </div>
-
-        <details style="margin-top:12px; font-size:13px;">
-            <summary style="font-weight:700; cursor:pointer; color:var(--wood-dark);">📋 本局出餐委託回顧與會考原題號</summary>
-            <div style="margin-top:8px; max-height:160px; overflow-y:auto; line-height:1.6;">
-                ${completedLog.map(m => `<p style="border-bottom:1px solid #eee; padding:4px 0;"><strong>${esc(m.text)}</strong><br><small>${m.explanation}｜會考原題第 ${m.source.questionId} 題</small></p>`).join('')}
-            </div>
-        </details>
-    `);
-}
-
-function modal(html) {
-    $('dialog-content').innerHTML = html;
-    if (!$('dialog').open) $('dialog').showModal();
-}
-
-function atlas() {
-    modal(`
-        <h2>📚 五界生物特徵圖鑑</h2>
-        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">生物分類與重要特徵速查（圖像為特徵示意）</p>
-        <div style="max-height:300px; overflow-y:auto; display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:10px;">
-            ${data.species.map(s => `
-                <div style="background:#f8fafc; border:1.5px solid #e2e8f0; border-radius:12px; padding:10px; text-align:center;">
-                    ${art(s)}
-                    <h4 style="font-size:14px; margin:4px 0; color:var(--wood-dark);">${esc(s.name)}</h4>
-                    <span style="font-size:11px; background:#dcfce7; color:#166534; padding:2px 6px; border-radius:6px;">${K[s.kingdom]}</span>
-                    <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">${s.note}</p>
-                </div>
-            `).join('')}
-        </div>
-    `);
-}
-
-function shop() {
-    modal(`
-        <h2>🎨 生態食堂裝飾</h2>
-        <p style="font-size:13px; color:var(--text-muted);">研究金幣：${profile.coins}</p>
-        <p style="margin-top:12px; font-size:14px;">已自動配備【薄荷生態吧台】與【金色大廚徽章】！</p>
-    `);
-}
-
-// 事件監聽
-$('orders').addEventListener('click', e => {
-    let b = e.target.closest('[data-order]');
-    if (b) submitOrder(Number(b.dataset.order));
-});
-
-$('lanes').addEventListener('click', e => {
-    let b = e.target.closest('[data-lane]');
-    if (b) pickCard(Number(b.dataset.lane), Number(b.dataset.index));
-});
-
-$('belt').addEventListener('click', e => {
-    let b = e.target.closest('[data-belt]');
-    if (b) {
-        let c = belt[Number(b.dataset.belt)];
-        if (c) { selected = c.uid; render(); }
-    }
-});
-
-$('return').onclick = () => {
-    let c = belt.find(x => x.uid === selected);
-    if (!c) return;
-    belt = belt.filter(x => x.uid !== selected);
-    selected = null;
-    render();
-    status('已將食材放回儲存庫。');
-};
-
-$('clue').onclick = () => {
-    let c = belt.find(x => x.uid === selected);
-    if (c) modal(`<h2>${esc(c.name)} 觀察線索</h2>${art(c)}<p>${c.traits.map(esc).join('、')}</p><p>${esc(c.note)}</p>`);
-};
-
-$('shuffle').onclick = () => {
-    makeLanes();
-    audio('pick');
-    render();
-    status('🔄 已為您免費刷一波全新食材！');
-};
-
-$('begin').onclick = () => start();
-$('mode').onchange = () => { mode = $('mode').value; render(); };
-$('sound').onclick = () => { sound = !sound; $('sound').textContent = '🔊 音效：' + (sound ? '開' : '關'); };
-$('guide').onclick = () => modal(`
-    <h2>🍣 生物迴轉食堂 玩法說明</h2>
-    <ol style="padding-left:20px; line-height:1.8; font-size:14px;">
-        <li>查看頂部顧客對話框的點餐需求（如：無細胞核的原核生物）。</li>
-        <li>點擊下方軌道上的生物食材直接取樣出餐。</li>
-        <li>每張顧客委託收集 2 份正確生物，完成 9 張即可結算大廚證書！</li>
-    </ol>
-`);
-$('atlas').onclick = () => data && atlas();
-$('shop').onclick = shop;
-$('close').onclick = () => $('dialog').close();
-
-// 主題切換
-document.querySelectorAll('[data-theme]').forEach(b => {
-    b.onclick = () => {
-        nextTheme = b.dataset.theme;
-        document.querySelectorAll('[data-theme]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.theme === nextTheme)));
-        $('theme-info').textContent = THEME_NAMES[nextTheme] + '：點擊「開始迴轉出餐研究」。';
-    };
-});
-
-// 載入 JSON
-async function load() {
-    try {
-        let files = ['biology.json', 'unit03_prokaryotes_protists_fungi.json', 'unit04_plants.json', 'unit05_animals.json'];
-        let results = await Promise.all(files.map(async f => {
-            let r = await fetch('data/' + f);
-            if (!r.ok) throw Error(f + ' HTTP ' + r.status);
-            return r.json();
-        }));
-        data = results[0];
-        for (let bank of results.slice(1)) banks[bank.unit] = bank;
-        roundSpecies = data.species;
-        render();
-        status('🍣 迴轉食堂已就緒！請選擇主題大餐，點擊「開始迴轉出餐研究」。');
-    } catch (e) {
-        console.error(e);
-        status('題庫載入中，請確保已上傳 JSON 題庫。');
-    }
-}
-
-load();
-
-/* --- 課堂專注計時器邏輯 --- */
-let timerSeconds = 180;
-let timerInterval = null;
-let isTimerRunning = false;
-let timerAudioCtx = null;
-
-function updateTimerDisplay() {
-    const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
-    const s = (timerSeconds % 60).toString().padStart(2, '0');
-    const el = document.getElementById('timer-text');
-    if (el) el.innerText = `${m}:${s}`;
-}
-
-function setTimerSeconds(sec) {
-    pauseTimer();
-    timerSeconds = sec;
-    updateTimerDisplay();
-}
-
-function toggleTimer() {
-    if (isTimerRunning) pauseTimer();
-    else startTimer();
-}
-
-function startTimer() {
-    isTimerRunning = true;
-    const btn = document.getElementById('t-toggle-btn');
-    if (btn) { btn.innerText = "⏸️ 暫停"; btn.style.background = "#f59e0b"; }
-
-    timerInterval = setInterval(() => {
-        if (timerSeconds > 0) {
-            timerSeconds--;
-            updateTimerDisplay();
-        } else {
-            pauseTimer();
-            playTimerAlarm();
+  }
+};}
+function chooseTheme(value){theme=value;document.querySelectorAll('[data-theme]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.theme===theme)));}
+function chooseMode(value){mode=value;$('learn-mode').setAttribute('aria-pressed',String(value==='learn'));$('challenge-mode').setAttribute('aria-pressed',String(value==='challenge'));}
+function showGame(){entered=true;$('entrance').hidden=true;document.body.classList.remove('at-entrance');$('game-shell').inert=false;$('game-shell').classList.add('screen-enter');hovered=keyFocused=false;render();$('pause').focus();window.scrollTo(0,0);}
+function startNew(t=theme,m=mode){if(!ready||busy)return;close();game.start(t,m);savedRound=null;save();showGame();feedback('新的研究開始了',`${THEMES[t]} · 共九張委託，每張正確提交兩次。可不限次更新餐桌樣本。`);}
+function confirmStart(){
+  if(!ready||busy)return;
+  const std = (window.BioGameSuite && window.BioGameSuite.getStudent()) || window.playerProfile;
+  if (!std || !std.name) {
+    if (window.BioGameSuite && typeof window.BioGameSuite.showLogin === 'function') {
+      window.BioGameSuite.showLogin({
+        gameTitle: '五界生物研究餐廳',
+        hideUnit: true,
+        onStart: (student) => {
+          window.playerProfile = { cls: student.class, seat: student.seat, name: student.name };
+          proceedStart();
         }
-    }, 1000);
+      });
+      return;
+    }
+  }
+  proceedStart();
 }
-
-function pauseTimer() {
-    isTimerRunning = false;
-    clearInterval(timerInterval);
-    const btn = document.getElementById('t-toggle-btn');
-    if (btn) { btn.innerText = "🚀 開始"; btn.style.background = "#059669"; }
+function proceedStart(){
+  if(savedRound||game.active){
+    show('<div class="dialog-tag">NEW RESEARCH</div><h2>開始一份新的研究？</h2><p class="dialog-note">目前未完成的委託與工作台將重設。已獲得的金幣與收藏會保留。</p><div class="dialog-actions"><button class="subtle" id="cancel-new">保留目前研究</button><button class="primary" id="confirm-new">開始新研究</button></div>','confirm');
+    $('cancel-new').onclick=close;
+    $('confirm-new').onclick=()=>startNew();
+  } else {
+    startNew();
+  }
 }
-
-function resetTimer() {
-    pauseTimer();
-    timerSeconds = 180;
-    updateTimerDisplay();
-}
-
-function playTimerAlarm() {
-    if (!timerAudioCtx) timerAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    try {
-        let osc = timerAudioCtx.createOscillator(), gain = timerAudioCtx.createGain();
-        osc.connect(gain); gain.connect(timerAudioCtx.destination);
-        osc.frequency.value = 880;
-        gain.gain.setValueAtTime(0.2, timerAudioCtx.currentTime);
-        osc.start(); osc.stop(timerAudioCtx.currentTime + 1.0);
-    } catch (e) {}
-}
-
-function openTimerModal() { document.getElementById('timer-modal').style.display = 'flex'; }
-function closeTimerModal() { document.getElementById('timer-modal').style.display = 'none'; }
+function entrance(){if(busy)return;close();savedRound=game.active?game.export():null;save();entered=false;$('game-shell').inert=true;$('entrance').hidden=false;document.body.classList.add('at-entrance');render();$('enter-lab').focus();motionUI();}
+function resume(){if(!ready||busy)return;const s=savedRound||game.export();if(!game.restore(s)){savedRound=null;save();render();$('load-status').textContent='舊研究資料無法恢復，請開始新研究。';return;}savedRound=null;showGame();save();feedback('歡迎回到研究室','上次的委託、工作台與得分已恢復。');}
+let journalFilter='all',journalQuery='',journalPage=0;
+function journal(){if(!ready||busy)return;show(`<div class="dialog-tag">THE SPECIMEN NOTEBOOK</div><div class="journal-heading"><h2>五界樣本圖鑑</h2><span>已觀察 ${profile.seen.length} / 48 · 已鑑定 ${profile.studied.length} / 48</span></div><div class="journal-filters"><label>分類 <select id="journal-filter"><option value="all">全部生物</option><option value="seen">已觀察收藏</option><option value="unseen">尚未觀察</option>${Object.entries(KINGDOMS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label><label>搜尋 <input id="journal-query" type="search" placeholder="輸入生物名稱" autocomplete="off"></label></div><div class="journal-grid" id="journal-grid"></div><div class="journal-pagination"><button class="subtle" id="journal-prev">← 上一頁</button><span id="journal-page"></span><button class="subtle" id="journal-next">下一頁 →</button></div><p class="journal-back">點選圖鑑可收錄觀察紀錄；成功提交才會取得鑑定標記。微生物已放大，圖像非等比例。</p>`,'journal','journal-dialog');$('journal-filter').value=journalFilter;$('journal-query').value=journalQuery;$('journal-filter').onchange=()=>{journalFilter=$('journal-filter').value;journalPage=0;renderJournal();};$('journal-query').oninput=()=>{journalQuery=$('journal-query').value;journalPage=0;renderJournal();};$('journal-prev').onclick=()=>{journalPage--;renderJournal();};$('journal-next').onclick=()=>{journalPage++;renderJournal();};renderJournal();}
+function renderJournal(){const list=payload.biology.species.filter(s=>(journalFilter==='all'||journalFilter===s.kingdom||journalFilter==='seen'&&profile.seen.includes(s.name)||journalFilter==='unseen'&&!profile.seen.includes(s.name))&&s.name.includes(journalQuery.trim()));const pages=Math.max(1,Math.ceil(list.length/12));journalPage=Math.max(0,Math.min(journalPage,pages-1));$('journal-grid').innerHTML=list.slice(journalPage*12,journalPage*12+12).map(s=>`<button class="journal-card" data-journal="${esc(s.name)}"><span>${profile.studied.includes(s.name)?'✓ 已鑑定':profile.seen.includes(s.name)?'已觀察':'待觀察'}</span>${sprite(s)}<h3>${esc(s.name)}</h3><small>${esc(KINGDOMS[s.kingdom])}</small></button>`).join('')||'<p class="no-results">沒有符合的樣本。</p>';$('journal-page').textContent=`${journalPage+1} / ${pages} 頁 · ${list.length} 種`;$('journal-prev').disabled=journalPage===0;$('journal-next').disabled=journalPage===pages-1;$('journal-grid').onclick=e=>{const b=e.target.closest('[data-journal]');if(b){const s=payload.biology.species.find(x=>x.name===b.dataset.journal);if(entered&&game.mode==='challenge')game.clue();specimen(s,{from:'journal'});save();}};}
+function shop(){if(!ready||busy)return;show(`<div class="dialog-tag">A LITTLE TOUCH OF YOUR OWN</div><div class="journal-heading"><h2>食堂裝飾</h2><span>研究金幣 ${profile.coins}</span></div><p class="shop-explanation">完成研究累積金幣，為研究室換個心情。裝飾不影響分類與得分。</p><div class="shop-grid">${BioCore.ITEMS.map(item=>{const owned=profile.owned.includes(item.id),active=profile[item.type]===item.id;return `<article class="shop-item"><div class="shop-preview ${item.type}" style="--swatch:${item.color}"><span></span></div><h3>${item.name}</h3><p>${item.description}</p><button class="${active?'subtle':'primary'}" data-buy="${item.id}" ${active||!owned&&profile.coins<item.price?'disabled':''}>${active?'使用中':owned?'套用':`購買並套用 · ${item.price} 金幣`}</button>${!owned&&profile.coins<item.price?`<small>還差 ${item.price-profile.coins} 金幣</small>`:''}</article>`;}).join('')}</div><p id="shop-message" role="status"></p>`,'shop','shop-dialog');$('dialog-body').querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{const r=BioCore.purchase(profile,b.dataset.buy);if(!r.ok)return;applyDecor();save();render();shop();$('shop-message').textContent='已套用：'+r.item.name;});}
+function help(){show('<div class="dialog-tag">WELCOME TO THE LAB</div><h2>慢慢觀察，自在研究</h2><ol class="guide-list"><li>選擇主題與模式，開始一局九張研究委託。</li><li>左側選一張委託，點選餐桌樣本並放入七格工作台。</li><li>選取工作台樣本，按「送交鑑定」。每張正確兩次即可完成，同種生物可以重複取樣。</li><li>答錯保留樣本，可換委託或放回。更新樣本不限次，也不扣分。</li></ol><p class="dialog-note">陪伴練習直接顯示特徵；自主挑戰先隱藏線索，仍可主動查看或使用圖鑑。滑鼠停在餐盤、鍵盤聚焦、開啟視窗與鑑定時會暫停餐桌。</p><p class="dialog-note">金幣、收藏、裝飾與未完成研究保存在此瀏覽器；返回入口後可繼續研究。圖像為形態示意，微生物已放大，請搭配文字判讀。</p><p class="dialog-note">課堂計時器是獨立工具，不會限制研究時間。可使用上方音效按鈕靜音。</p>','help');}
+let timerRemaining=180,timerDeadline=null,timerTick=null;
+function timerSeconds(){return timerDeadline?Math.max(0,Math.ceil((timerDeadline-Date.now())/1000)):timerRemaining;}
+function timeLabel(){const s=timerSeconds();return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function updateTimer(){const el=$('timer-text');if(el)el.textContent=timeLabel();if(timerDeadline&&timerSeconds()===0){timerDeadline=null;timerRemaining=0;clearInterval(timerTick);timerTick=null;tone('complete');feedback('課堂計時器時間到','本局研究可以繼續，計時不影響得分。');if(dialogView==='timer')timerModal();}}
+function stopTimer(){timerRemaining=timerSeconds();timerDeadline=null;clearInterval(timerTick);timerTick=null;}
+function timerModal(){if(busy)return;show(`<div class="dialog-tag">CLASSROOM TIMER</div><h2>課堂專注計時器</h2><p class="dialog-note">計時器獨立運作，關閉視窗後仍繼續，不影響研究得分。</p><div id="timer-text" class="timer-display">${timeLabel()}</div><div class="timer-presets">${[1,3,5,10].map(n=>`<button class="subtle" data-minutes="${n}">${n} 分鐘</button>`).join('')}</div><div class="dialog-actions"><button class="primary" id="timer-toggle">${timerDeadline?'暫停':'開始'}</button><button class="subtle" id="timer-reset">重設 3 分鐘</button></div>`,'timer');document.querySelectorAll('[data-minutes]').forEach(b=>b.onclick=()=>{stopTimer();timerRemaining=+b.dataset.minutes*60;timerModal();});$('timer-toggle').onclick=()=>{if(timerDeadline)stopTimer();else if(timerRemaining>0){timerDeadline=Date.now()+timerRemaining*1000;timerTick=setInterval(updateTimer,250);}timerModal();};$('timer-reset').onclick=()=>{stopTimer();timerRemaining=180;timerModal();};}
+const plateNodes=Array.from({length:8},(_,i)=>{const b=document.createElement('button');b.className='plate';b.dataset.plateIndex=i;b.disabled=true;b.onclick=()=>inspect(i);b.onpointerenter=()=>{hovered=true;motionUI();};b.onpointerleave=()=>{hovered=false;motionUI();};b.onfocus=()=>{keyFocused=b.matches(':focus-visible');motionUI();};b.onblur=()=>{keyFocused=false;motionUI();};$('plates').append(b);return b;});
+$('orders').onclick=e=>{const b=e.target.closest('[data-order]');if(b&&!busy&&game.active){game.selectOrder(+b.dataset.order);save();render();}};$('slots').onclick=e=>{const b=e.target.closest('[data-slot]');if(b&&!busy&&game.active){const s=game.belt[+b.dataset.slot];if(s){game.select(s.uid);save();render();}}};
+$('submit').onclick=submit;$('remove').onclick=()=>{if(busy||!game.active)return;game.remove();save();render();feedback('樣本已放回','你可以繼續觀察餐桌，或更新一批樣本。');};$('clue').onclick=()=>{if(busy||!game.active)return;const s=game.belt.find(x=>x.uid===game.selected);if(s){game.clue();save();specimen(s,{from:'bench',reveal:true});}};$('shuffle').onclick=()=>{if(busy||!game.active)return;game.refresh();save();render();feedback('餐桌樣本已更新','目前每張委託都有可用樣本，請仔細觀察與判斷。');};$('pause').onclick=()=>{paused=!paused;motionUI();};$('restart').onclick=()=>{chooseTheme(game.theme);chooseMode(game.mode);confirmStart();};$('help').onclick=help;$('lobby-help').onclick=help;$('journal').onclick=$('lobby-atlas').onclick=journal;$('shop').onclick=$('lobby-shop').onclick=shop;$('timer').onclick=timerModal;$('enter-lab').onclick=confirmStart;$('resume').onclick=resume;$('go-entrance').onclick=entrance;$('sound-toggle').onclick=()=>{sound=!sound;save();render();};$('close-dialog').onclick=close;$('dialog').addEventListener('close',()=>{pending=null;dialogView='';motionUI();});document.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>chooseTheme(b.dataset.theme));$('learn-mode').onclick=()=>chooseMode('learn');$('challenge-mode').onclick=()=>chooseMode('challenge');reduced.addEventListener('change',()=>{paused=reduced.matches;motionUI();});window.addEventListener('pagehide',save);
+let dims={w:0,h:0,pw:100,ph:106};const ro=new ResizeObserver(()=>{dims={w:$('scene').clientWidth,h:$('scene').clientHeight,pw:plateNodes[0].offsetWidth,ph:plateNodes[0].offsetHeight};});ro.observe($('scene'));
+function frame(t){const dt=Math.min((t-last)/1000,.05);last=t;if(entered&&game?.active&&!paused&&!hovered&&!keyFocused&&!busy&&!document.hidden&&!$('dialog').open)angle+=dt*.065;const {w,h,pw,ph}=dims;if(w&&h){const ih=w/1.5,offset=(ih-h)*.52;plateNodes.forEach((b,i)=>{const a=angle+i*Math.PI/4,depth=(Math.sin(a)+1)/2,x=w*(.5+.393*Math.cos(a)),y=ih*(.505+.177*Math.sin(a))-offset;b.style.transform=`translate(${x-pw/2}px,${y-ph/2}px) scale(${.82+.18*depth})`;b.style.zIndex=String(Math.round(depth*100)+1);});}requestAnimationFrame(frame);}requestAnimationFrame(frame);
+async function load(){let fallback=false;try{payload=BioCore.validate(BIO_FALLBACK);if(location.protocol!=='file:'){const ctl=new AbortController(),timeout=setTimeout(()=>ctl.abort(),4000);try{const files=['biology.json','unit03_prokaryotes_protists_fungi.json','unit04_plants.json','unit05_animals.json'];const res=await Promise.all(files.map(async f=>{const r=await fetch('data/'+f,{signal:ctl.signal,cache:'no-cache'});if(!r.ok)throw Error('HTTP '+r.status);return r.json();}));const online=BioCore.validate({biology:res[0],banks:Object.fromEntries(res.slice(1).map(b=>[b.unit,b]))});if(online.biology.species.some(s=>!BIO_ART[s.name]))throw Error('缺少樣本插畫');payload=online;}catch{fallback=true;}finally{clearTimeout(timeout);}}game=new BioCore.DiningEngine(payload);let raw=savedRecord?.profile;if(!raw){try{raw=JSON.parse(localStorage.getItem('bio_sushi_v4')||localStorage.getItem('bio_lab_v3')||'null');}catch{}}profile=BioCore.normalizeProfile(raw||{},payload.biology.species.map(s=>s.name));if(savedRecord?.round&&game.restore(savedRecord.round)){savedRound=game.export();}ready=true;applyDecor();render();save();$('enter-lab').disabled=false;$('enter-lab').innerHTML='<span>開始午後研究</span><span>→</span>';$('load-status').textContent=fallback?'線上題庫暫時無法讀取，已啟用內建完整題庫。':'48 種樣本 · 每局 9 張委託 · 無時間限制';storageMessage();}catch(e){console.error(e);$('load-status').textContent='研究資料不完整，請確認 data-embedded.js、core.js 與 data 資料夾。';$('enter-lab').innerHTML='<span>研究資料載入失敗</span>';}}
+load();
