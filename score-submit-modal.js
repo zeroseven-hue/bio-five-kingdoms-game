@@ -1,6 +1,6 @@
 /**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
- * 版本: v4.3 (真實題庫動態聯動 · 精選快問快答秒開 · 開局安全凍結守門員) (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
+ * 版本: v4.5 (真實題庫動態聯動 · 精選快問快答秒開 · 開局安全凍結守門員) (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
  * 
  * 🎨 五大情境主題（外觀自動隨遊戲調配，底層標準 100% 嚴格統一）：
  * 1. 🕹️ 復古像素街機風 (Pixel) - 瑪利歐 (mario)、小精靈 (pacman)、下樓梯 (shaft)
@@ -985,7 +985,7 @@
       for (let i = 0; i < existingUnitSelect.options.length; i++) {
         const opt = existingUnitSelect.options[i];
         if (opt.value && opt.value !== 'FAST_DEFAULT') {
-          unitOptionsHtml += `<option value="${opt.value}">${opt.text}</option>`;
+          unitOptionsHtml += `<option value="${opt.value}">${cleanUnitTitle(opt.text)}</option>`;
         }
       }
     } else {
@@ -1031,7 +1031,8 @@
       }
     }
 
-    const unitTitle = isStandalone ? standaloneUnitName : (options.unitTitle || (isDispatch ? `課堂指定單元 (${urlUnit})` : '[7上] 1-1 生命現象'));
+    const cleanDispatched = isDispatch ? cleanUnitTitle(urlUnit) : '';
+    const unitTitle = isStandalone ? standaloneUnitName : (options.unitTitle ? cleanUnitTitle(options.unitTitle) : (isDispatch ? cleanDispatched : '[7上] 1-1 生命現象'));
 
     // 10 分鐘中斷暫存恢復
     const savedSessionRaw = sessionStorage.getItem('bgs_active_session');
@@ -1093,8 +1094,11 @@
         </div>
 
         <div class="bgs-form-group">
-          <label class="bgs-label">學生真實全名 (必填，勿填綽號)</label>
-          <input type="text" class="bgs-input" id="bgsNameInput" placeholder="請輸入真實全名，請勿填寫暱稱" maxlength="15" required />
+          <label class="bgs-label">學生真實全名 (必填真實中文本名)</label>
+          <input type="text" class="bgs-input" id="bgsNameInput" placeholder="請填寫中文真實本名（例：王拓、王小明）" maxlength="10" autocomplete="off" required />
+          <div id="bgsNameHint" style="font-size:0.78rem; margin-top:5px; color:#94a3b8; transition:all 0.2s ease;">
+            ✍️ 請填寫 2～5 字中文真實全名 (單名如「王拓」亦可)
+          </div>
         </div>
 
         ${isStandalone ? `
@@ -1110,7 +1114,7 @@
             <label class="bgs-label">挑戰單元 (老師派卷指定)</label>
             <div class="bgs-unit-badge">
               <span>🎯</span>
-              <span>${unitTitle} (派卷鎖定)</span>
+              <span>${cleanUnitTitle(unitTitle)} (派卷鎖定)</span>
             </div>
           </div>
         ` : `
@@ -1132,18 +1136,90 @@
     const classSel = overlay.querySelector('#bgsClassSelect');
     const seatSel = overlay.querySelector('#bgsSeatSelect');
     const nameInp = overlay.querySelector('#bgsNameInput');
+    const nameHint = overlay.querySelector('#bgsNameHint');
 
+    // 記憶前次輸入資料 (方便返回修改時免重打)
+    if (currentStudent && currentStudent.name) {
+      nameInp.value = currentStudent.name;
+    }
+    if (currentStudent && currentStudent.class) {
+      classSel.value = currentStudent.class;
+    }
+    if (currentStudent && currentStudent.seat) {
+      seatSel.value = currentStudent.seat;
+    }
+
+    function checkValidName(str) {
+      if (!str) return false;
+      const clean = str.replace(/\s+/g, '');
+      if (!/^[\u4e00-\u9fa5]{2,5}$/.test(clean)) return false;
+      if (/(.)\1{2,}/.test(clean)) return false; // 封鎖 哈哈哈、啊啊啊等連字
+      return true;
+    }
+
+    function updateValidationState() {
+      const raw = nameInp.value.trim();
+      const isValid = checkValidName(raw);
+
+      if (isValid) {
+        btnNext.disabled = false;
+        btnNext.style.opacity = '1';
+        btnNext.style.cursor = 'pointer';
+        btnNext.style.filter = 'none';
+        btnNext.textContent = theme.loginBtnText || '下一步：核對身分與公約 ➜';
+        nameInp.style.borderColor = '#22c55e';
+        nameInp.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.2)';
+        if (nameHint) {
+          nameHint.style.color = '#16a34a';
+          nameHint.textContent = '✅ 姓名格式正確！請點擊下一步';
+        }
+      } else {
+        btnNext.disabled = true;
+        btnNext.style.opacity = '0.5';
+        btnNext.style.cursor = 'not-allowed';
+        btnNext.style.filter = 'grayscale(80%)';
+        btnNext.textContent = '🔒 請填妥中文姓名以解鎖 ➜';
+        nameInp.style.borderColor = raw.length > 0 ? '#f59e0b' : '';
+        nameInp.style.boxShadow = 'none';
+        if (nameHint) {
+          if (raw.length === 0) {
+            nameHint.style.color = '#94a3b8';
+            nameHint.textContent = '✍️ 請填寫 2～5 字中文真實全名 (單名如「王拓」亦可)';
+          } else if (raw.length === 1) {
+            nameHint.style.color = '#f59e0b';
+            nameHint.textContent = '⚠️ 姓名至少需 2 個中文字 (例如：王拓)';
+          } else if (/[a-zA-Z0-9]/.test(raw)) {
+            nameHint.style.color = '#ef4444';
+            nameHint.textContent = '🛑 禁止填寫英數字代碼或暱稱，請填中文全名';
+          } else if (/(.)\1{2,}/.test(raw)) {
+            nameHint.style.color = '#ef4444';
+            nameHint.textContent = '🛑 請填寫真實姓名，勿填寫重複字玩笑話';
+          } else {
+            nameHint.style.color = '#f59e0b';
+            nameHint.textContent = '⚠️ 請輸入 2～5 字繁體中文真實本名';
+          }
+        }
+      }
+      return isValid;
+    }
+
+    nameInp.addEventListener('input', updateValidationState);
+    nameInp.addEventListener('change', updateValidationState);
+
+    // 初始化檢驗狀態
+    updateValidationState();
     nameInp.focus();
 
-    btnNext.addEventListener('click', () => {
+    btnNext.addEventListener('click', (e) => {
       const cls = classSel.value;
       const seat = seatSel.value;
-      const name = nameInp.value.trim();
+      const name = nameInp.value.trim().replace(/\s+/g, '');
 
-      if (!name) {
-        alert('⚠️ 請務必填寫您的真實姓名，不可留空！');
+      if (!checkValidName(name)) {
+        e.preventDefault();
         nameInp.focus();
-        return;
+        updateValidationState();
+        return; // 零彈窗！按鈕不動作
       }
 
       const chosenUnit = isStandalone ? 'standalone_fixed' : (isDispatch ? urlUnit : (overlay.querySelector('#bgsUnitSelect')?.value || 'FAST_DEFAULT'));
@@ -1185,17 +1261,27 @@
         <h2 class="bgs-title">👤 請核對挑戰身分</h2>
         <p class="bgs-subtitle">${theme.confirmSubtitle}</p>
 
-        <div style="background:${theme.badgeBg}; border:1.5px solid ${theme.cardBorder}; border-radius:14px; padding:12px; text-align:center; margin-bottom:14px;">
-          <div style="font-size:0.85rem; color:#64748b; font-weight:700;">登錄身分確認</div>
-          <div style="font-size:1.45rem; font-weight:900; color:${theme.accentColor}; margin:4px 0;">
-            ${currentStudent.class} 班級　${currentStudent.seat} 座號
+        <div style="background:${theme.badgeBg}; border:2px solid ${theme.cardBorder}; border-radius:16px; padding:14px; text-align:center; margin-bottom:14px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+          <div style="font-size:0.82rem; color:#64748b; font-weight:700; letter-spacing:1px;">課堂身分確認</div>
+          <div style="font-size:1.35rem; font-weight:900; color:${theme.accentColor}; margin:4px 0;">
+            ${currentStudent.class} 班　${currentStudent.seat} 號
           </div>
-          <div style="font-size:1.15rem; font-weight:800; color:#0f172a;">
-            姓名：${currentStudent.name}
+          <div style="margin:8px 0; padding:6px 16px; background:rgba(255,255,255,0.9); border-radius:12px; border:1.5px dashed ${theme.cardBorder}; display:inline-block;">
+            <span style="font-size:0.88rem; color:#64748b; font-weight:700;">學生姓名：</span>
+            <span style="font-size:1.6rem; font-weight:900; color:#0f172a; letter-spacing:3px;">${currentStudent.name}</span>
+          </div>
+          <div style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">
+            ⚠️ 本次成績將以此真實姓名直接登錄點名冊
           </div>
           ${options.hideUnit ? '' : `
+            <div style="font-size:0.85rem; font-weight:700; color:${theme.accentColor}; margin-top:6px;">
+              📚 挑戰主題：${cleanUnitTitle(currentStudent.unitTitle) || '專屬任務'}
+            </div>
+          `}
+        </div>
+          ${options.hideUnit ? '' : `
             <div style="font-size:0.82rem; color:${theme.accentColor}; margin-top:4px;">
-              📚 挑戰主題：${currentStudent.unitTitle || '專屬任務'}
+              📚 挑戰主題：${cleanUnitTitle(currentStudent.unitTitle) || '專屬任務'}
             </div>
           `}
         </div>
@@ -1453,7 +1539,9 @@
       duration: duration,
       accuracy: options.accuracy || '--',
       unit: currentStudent.unit || 'general',
-      unitTitle: currentStudent.unitTitle || '',
+      unitTitle: cleanUnitTitle(currentStudent.unitTitle || ''),
+      errorCount: options.errorCount !== undefined ? options.errorCount : 0,
+      keywords: options.keywords || '全對無錯題',
       timestamp: new Date().toISOString()
     };
 
@@ -1482,7 +1570,33 @@
       }, 350);
     }
 
-    if (nowTime - lastSubTime < 10000) {
+    if (options.requireVerifiedSubmission) {
+      Object.assign(payload, {gameId: options.gameId || 'blackhole', originalScore: score, finalScore: score, units: currentStudent.unitTitle || currentStudent.unit, errorCount: options.errorCount || 0, keywords: options.keywords || '全對無錯題'});
+      async function verifiedSubmit() {
+        statusBtn.disabled = true;
+        statusBtn.textContent = '📡 成績傳送中，請稍候…';
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 8000);
+        try {
+          const response = await fetch(gasUrl, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),signal:controller.signal});
+          if (!response.ok) throw new Error('伺服器未回應');
+          const result = await response.json();
+          if (result.status !== 'success') throw new Error('未確認登錄成功');
+          proceedToStage2(false);
+        } catch (_) {
+          statusBtn.disabled = true;
+          statusBtn.className = 'bgs-btn bgs-btn-primary';
+          statusBtn.textContent = '⚠️ 網路稍有延遲，成績已快照存於本機';
+          try {
+            if (navigator.sendBeacon) navigator.sendBeacon(gasUrl, JSON.stringify(payload));
+          } catch (_) {}
+          setTimeout(() => {
+            proceedToStage2(false);
+          }, 1200);
+        } finally { clearTimeout(timeout); }
+      }
+      verifiedSubmit();
+    } else if (nowTime - lastSubTime < 10000) {
       // 10秒內重複提交，直接顯示成功徽章
       setTimeout(() => {
         proceedToStage2(true);
@@ -1513,7 +1627,12 @@
     // 🔹 階段二雙軌按鈕控制
     btnExtra.addEventListener('click', () => {
       overlay.remove();
-      if (typeof options.onRetry === 'function') {
+      isGameActive = true;
+      isScoreSubmitted = false;
+      initExitGuard();
+      if (typeof options.onBonusChallenge === 'function') {
+        options.onBonusChallenge();
+      } else if (typeof options.onRetry === 'function') {
         options.onRetry();
       } else {
         window.location.reload();
