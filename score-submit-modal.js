@@ -885,6 +885,41 @@
     }
   }
 
+  
+  // 🔹 內部工具：題庫標題智慧淨化（去除檔案路徑、版本前綴、重複 ID 與副檔名）
+  function cleanUnitTitle(raw) {
+    if (!raw) return '精選課堂生物題庫';
+    let str = decodeURIComponent(String(raw)).trim();
+    
+    // 移除外部包裹與派卷鎖定標註
+    str = str.replace(/[\(（]\s*派卷鎖定\s*[\)）]/g, '').trim();
+    str = str.replace(/^課堂指定單元\s*[:：]?\s*/, '').trim();
+    if (str.startsWith('(') && str.endsWith(')')) str = str.slice(1, -1).trim();
+    if (str.startsWith('（') && str.endsWith('）')) str = str.slice(1, -1).trim();
+
+    // 如果包含 ' - '，通常前面是重複的英文代碼，直接取後半段 (例如 'BIO01_2-3物質進出細胞的方式 - [7上] 2-3 物質進出細胞的方式' ➔ '[7上] 2-3 物質進出細胞的方式')
+    if (str.includes(' - ')) {
+      const parts = str.split(' - ');
+      str = parts[parts.length - 1].trim();
+    }
+    
+    // 移除目錄路徑 (如 '翰林版/bio01/' 或 'bio01/')
+    str = str.replace(/^.*[\\\/]/, '');
+    
+    // 移除副檔名 .json 與前後殘留括號
+    str = str.replace(/\.json$/i, '').trim();
+    str = str.replace(/^[\(（]/, '').replace(/[\)）]$/, '').trim();
+    
+    // 移除版本字樣 (翰林版、康軒版、南一版等)
+    str = str.replace(/^(翰林版|康軒版|南一版|翰林|康軒|南一)[_\s-]*/i, '');
+    
+    // 移除英數字開頭內部編號 (如 bio01_、BIO02_ 等)
+    str = str.replace(/^[a-zA-Z]+[0-9]*[_\s-]+/, '');
+
+    return str || '精選課堂生物題庫';
+  }
+  window.cleanUnitTitle = cleanUnitTitle;
+
   // 自動解析學生資訊輔助函式
   function resolveStudentProfile(options) {
     options = options || {};
