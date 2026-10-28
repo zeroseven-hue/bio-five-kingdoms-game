@@ -1,4 +1,4 @@
-﻿/**
+/**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
  * 版本: v4.5 (真實題庫動態聯動 · 精選快問快答秒開 · 開局安全凍結守門員) (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
  * 
@@ -181,8 +181,10 @@
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
+        overflow-y: auto;
         z-index: 999999;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif;
         padding: 16px;
@@ -282,8 +284,10 @@
         border: none;
         cursor: pointer;
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
+        overflow-y: auto;
         gap: 8px;
         transition: all 0.2s ease;
         box-sizing: border-box;
@@ -1310,12 +1314,6 @@
           </div>
           ${options.hideUnit ? '' : `
             <div style="font-size:0.85rem; font-weight:700; color:${theme.accentColor}; margin-top:6px;">
-              📚 挑戰主題：${cleanUnitTitle(currentStudent.unitTitle) || '專屬任務'}
-            </div>
-          `}
-        </div>
-          ${options.hideUnit ? '' : `
-            <div style="font-size:0.82rem; color:${theme.accentColor}; margin-top:4px;">
               📚 挑戰主題：${cleanUnitTitle(currentStudent.unitTitle) || '專屬任務'}
             </div>
           `}
