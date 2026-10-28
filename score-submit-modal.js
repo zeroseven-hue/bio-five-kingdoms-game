@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 🏆 BioGameSuite / ScoreSubmitModal (國中生物遊戲平台終極標準中介層模組)
  * 版本: v4.5 (真實題庫動態聯動 · 精選快問快答秒開 · 開局安全凍結守門員) (五大情境沉浸主題 · 全自動開局守門員 · 純數字選單 · 中途防手滑護城河 · 三階段動態結算 · 4大交機檢核)
  * 
@@ -1130,9 +1130,9 @@
 
         <div class="bgs-form-group">
           <label class="bgs-label">學生真實全名 (必填真實中文本名)</label>
-          <input type="text" class="bgs-input" id="bgsNameInput" placeholder="請填寫中文真實本名（例：王拓、王小明）" maxlength="10" autocomplete="off" required />
+          <input type="text" class="bgs-input" id="bgsNameInput" placeholder="請填寫中文真實本名（例：陳立、王小明）" maxlength="10" autocomplete="off" required />
           <div id="bgsNameHint" style="font-size:0.78rem; margin-top:5px; color:#94a3b8; transition:all 0.2s ease;">
-            ✍️ 請填寫 2～5 字中文真實全名 (單名如「王拓」亦可)
+            ✍️ 請填寫 2～5 字中文真實全名 (單名如「陳立」亦可)
           </div>
         </div>
 
@@ -1219,10 +1219,10 @@
         if (nameHint) {
           if (raw.length === 0) {
             nameHint.style.color = '#94a3b8';
-            nameHint.textContent = '✍️ 請填寫 2～5 字中文真實全名 (單名如「王拓」亦可)';
+            nameHint.textContent = '✍️ 請填寫 2～5 字中文真實全名 (單名如「陳立」亦可)';
           } else if (raw.length === 1) {
             nameHint.style.color = '#f59e0b';
-            nameHint.textContent = '⚠️ 姓名至少需 2 個中文字 (例如：王拓)';
+            nameHint.textContent = '⚠️ 姓名至少需 2 個中文字 (例如：陳立)';
           } else if (/[a-zA-Z0-9]/.test(raw)) {
             nameHint.style.color = '#ef4444';
             nameHint.textContent = '🛑 禁止填寫英數字代碼或暱稱，請填中文全名';
