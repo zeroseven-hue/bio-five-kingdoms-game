@@ -284,10 +284,8 @@
         border: none;
         cursor: pointer;
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-        overflow-y: auto;
         gap: 8px;
         transition: all 0.2s ease;
         box-sizing: border-box;
@@ -1737,9 +1735,21 @@
       } catch (_) {}
     }
 
-    // 取得遊戲標題
-    const rawTitle = document.querySelector('h1')?.innerText || document.title || '課堂生物挑戰';
-    const cleanTitle = rawTitle.replace(/[【】\[\]]/g, '').split('|')[0].split('-')[0].trim();
+    // 取得遊戲標題（優先從 document.title 提取乾淨的遊戲名稱，避開 #pauseOverlay 或其他隱藏層的 h1）
+    let cleanTitle = '';
+    if (document.title) {
+      cleanTitle = document.title.replace(/[【】\[\]]/g, '').split('：')[0].split('|')[0].split('-')[0].trim();
+    }
+    if (!cleanTitle || cleanTitle.includes('老師講解中')) {
+      const h1List = Array.from(document.querySelectorAll('h1'));
+      const validH1 = h1List.find(h => !h.closest('#pauseOverlay') && !h.closest('.overlay') && !h.innerText.includes('老師講解中'));
+      if (validH1) {
+        cleanTitle = validH1.innerText.replace(/[【】\[\]]/g, '').split('：')[0].split('|')[0].split('-')[0].trim();
+      }
+    }
+    if (!cleanTitle || cleanTitle.includes('老師講解中')) {
+      cleanTitle = '課堂生物挑戰';
+    }
 
     // 判定是否為大廳二獨立遊戲
     const hrefStr = (typeof location !== 'undefined' && location.href) ? location.href : '';
