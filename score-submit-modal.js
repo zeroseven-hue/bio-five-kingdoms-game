@@ -30,6 +30,10 @@
   'use strict';
 
   const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbzDHUfJKbGtgfYM5a1PHpQzbW2JGZL3zFTh582r95vcOKupGRfZVa0ToHbbfX1MirzbbQ/exec';
+  const DEFAULT_CLASSES = [
+    '701', '702', '703', '704', '705', '706', '707', '708', '709', '710',
+    '七甲', '七乙', '七丙'
+  ];
 
   let currentStudent = { class: '', seat: '', name: '', unit: '', unitTitle: '' };
   let isGameActive = false;
@@ -978,8 +982,16 @@
       }
     }
 
-    // 純化班級與座號
-    if (cls) cls = String(cls).replace(/[^\d]/g, '');
+    // 純化班級與座號 (支援 701~710 與 七甲、七乙、七丙)
+    if (cls) {
+      const clsStr = String(cls).trim().replace(/班$/, '');
+      const matchedSpecial = clsStr.match(/^(?:7|七)([甲乙丙])$/);
+      if (matchedSpecial) {
+        cls = '七' + matchedSpecial[1];
+      } else {
+        cls = clsStr.replace(/[^\d]/g, '');
+      }
+    }
     if (seat) {
       seat = String(seat).replace(/[^\d]/g, '');
       if (seat.length === 1) seat = '0' + seat;
@@ -1099,8 +1111,7 @@
     overlay.id = 'bgsLoginOverlay';
 
     const savedClass = localStorage.getItem('bgs_last_class') || '701';
-    const classOpts = Array.from({ length: 10 }, (_, i) => {
-      const c = `7${String(i + 1).padStart(2, '0')}`;
+    const classOpts = DEFAULT_CLASSES.map(c => {
       return `<option value="${c}" ${c === savedClass ? 'selected' : ''}>${c}</option>`;
     }).join('');
 
@@ -1121,7 +1132,7 @@
 
         <div class="bgs-row">
           <div class="bgs-form-group">
-            <label class="bgs-label">班級 (701~710)</label>
+            <label class="bgs-label">班級 (701~710、七甲~七丙)</label>
             <select class="bgs-select" id="bgsClassSelect">${classOpts}</select>
           </div>
           <div class="bgs-form-group">
@@ -1385,8 +1396,7 @@
     overlay.className = 'bgs-overlay bgs-overlay-' + theme.id;
     overlay.id = 'bgsPromptIdOverlay';
 
-    const classOpts = Array.from({ length: 10 }, (_, i) => {
-      const c = `7${String(i + 1).padStart(2, '0')}`;
+    const classOpts = DEFAULT_CLASSES.map(c => {
       return `<option value="${c}" ${c === currentStudent.class ? 'selected' : ''}>${c}</option>`;
     }).join('');
 
@@ -1407,7 +1417,7 @@
 
         <div class="bgs-row">
           <div class="bgs-form-group">
-            <label class="bgs-label">班級 (701~710)</label>
+            <label class="bgs-label">班級 (701~710、七甲~七丙)</label>
             <select class="bgs-select" id="bgsQuickClass">${classOpts}</select>
           </div>
           <div class="bgs-form-group">
